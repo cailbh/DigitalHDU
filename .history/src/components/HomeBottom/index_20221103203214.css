@@ -1,0 +1,15 @@
+#homeBottom {
+  position: absolute;
+  bottom:10px;
+  left: 20%;
+  
+  /* top: 50px; */
+  width: calc(60%);
+  height: calc(30% - 50px);
+  /* background-color: aqua; */
+}
+#homeBottomBody {
+  width: calc(100% - 10px);
+  height: calc(100% - 10px);
+  float: left;
+}

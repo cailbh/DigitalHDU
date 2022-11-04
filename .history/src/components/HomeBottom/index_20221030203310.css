@@ -1,0 +1,9 @@
+#homeBottom {
+  position: absolute;
+  bottom:0px;
+  left: 20%;
+  /* top: 50px; */
+  width: 20%;
+  height: calc(100% - 50px);
+  /* background-color: aqua; */
+}

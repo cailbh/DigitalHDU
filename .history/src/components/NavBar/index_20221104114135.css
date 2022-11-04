@@ -1,0 +1,66 @@
+#navBar {
+  position: absolute;
+  top:60px;
+  left: 20%;
+  
+  /* top: 50px; */
+  width: calc(60%);
+  height: 50px; 
+  /* background-color: aqua; */
+}
+#navBarBody {
+  width: calc(100% - 90px);
+  height: 100%;
+  position: absolute;
+  left: 50px;
+  background: rgba(12, 46, 56,0) ;
+  background: linear-gradient(-35deg, transparent 20px, rgba(12, 46, 56,1) 0) right, linear-gradient(35deg, transparent 20px, rgba(12, 46, 56,1) 0) left;
+  background-size: 50% 100%;
+  background-repeat: no-repeat;
+  /* border-bottom-left-radius: 100px; */
+  /* box-shadow:  0px 0px 10px 2px #83FFFD; */
+  /* border-left:50px solid transparent; */
+}
+.colorfulShadow {
+  position: relative;
+}
+
+.colorfulShadow::after {
+  content: "";
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background: inherit;
+  background-position: center center;
+  filter: drop-shadow(0px 0px 10px rgba(0, 0, 0, 0.50)) blur(20px);
+  z-index: -1;
+
+  /* animation time! */
+  animation: oscillate 1s cubic-bezier(.17, .67, .45, 1.32) infinite alternate;
+}
+
+@keyframes oscillate {
+  from {
+      transform: scale(1, 1);
+  }
+
+  to {
+      transform: scale(1.3, 1.3);
+  }
+}
+.sushi {
+  margin: 100px;
+  width: 150px;
+  height: 150px;
+  background-image: url("https://www.kirupa.com/icon/1f363.svg");
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+.navLeft{
+  position:absolute;
+  left: 0;
+  height: 100%;
+  width: 50px;
+  /* background: rgb(12, 46, 56);
+  box-shadow: inset 0px 0px 10px 2px #83FFFD; */
+}

@@ -1,0 +1,92 @@
+.contain {
+    width: 100%;
+    height: 100%;
+    /* position: fixed; */
+    /* z-index: 100; */
+    /* left: 0;
+    top: 0; */
+  }
+.video{
+  float: left;
+  width: 100%;
+  height: calc(100% - 40px);
+  object-fit: contain;
+}
+.videoCard{
+  margin: 5px;
+  width: calc(25% - 10px);
+  height: calc(100% - 10px);
+  float: left;
+}
+.videoName{
+  /* margin: 5px; */
+  width: 100%;
+  height: 30px;
+  float: left;
+  background: rgb(18, 59, 74);
+  text-align: center;
+  align-items: center;
+  color: #83FFFD;
+  font-weight: 600;
+  font-size: 20px;
+  /* line-height: 40px; */
+  font-variant: tabular-nums;
+  font-feature-settings: "tnum";
+  font-family: SourceHanSerifCN-Heavy, SourceHanSerifCN;
+  text-align: center;
+}
+#Monitor{
+  width: calc(100% -10px);
+  height: calc(100% - 20px);
+  background: rgb(12, 46, 56);
+  position: absolute;
+  width: calc(100% - 10px);
+  height: calc(100% - 10px);
+  top:10px;
+  border: 1px solid rgb(65, 255, 250);
+}
+.borderSelf{
+  height: 100%;
+  width: 50%;
+  position:absolute;
+}
+.borderLeft{
+  left: 0;
+  
+  background:rgba(0,0,0,0) url('../../assets/img/border2.png');
+  background-size: contain;
+  background-repeat:no-repeat;
+
+}
+.borderRight{
+  right: 0;
+  
+  background:rgba(0,0,0,0) url('../../assets/img/border1.png');
+  background-size: cover;
+  background-size: contain;
+  background-position:calc(100% + 0px) 100%;
+  background-repeat:no-repeat;
+}
+.MonHead{
+  float: left;
+  width: 30px;
+  height: 100%;
+  margin-left: 10px ;
+  display: flex;
+  text-align: center;
+  align-items: center;
+  color: #83FFFD;
+  font-weight: 600;
+  font-size: 20px;
+  /* line-height: 40px; */
+  font-variant: tabular-nums;
+  font-feature-settings: "tnum";
+  font-family: SourceHanSerifCN-Heavy, SourceHanSerifCN;
+  text-align: center;
+  /* writing-mode: vertical-rl; */
+}
+.MonBody{
+  float: left;
+  height: 100%;
+  width: calc(100% - 60px);
+}

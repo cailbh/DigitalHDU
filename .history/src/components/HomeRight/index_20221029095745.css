@@ -1,0 +1,32 @@
+.bar {
+    width: 100%;
+    height: 100%;
+    /* position: fixed; */
+    /* z-index: 100; */
+    /* left: 0;
+    top: 0; */
+  }
+    
+  #homeRight {
+    position: absolute;
+    right: 0px;
+    top:50px;
+    width: calc(20%);
+    height: 100%;
+    /* background-color: aqua; */
+  }
+  #homeRightup{
+    width: calc(100% - 10px);
+    height: calc(35% - 10px);
+    float: left;
+  }
+  #homeRightmid{
+    width: calc(100% - 10px);
+    height: calc(35% - 10px);
+    float: left;
+  }
+  #homeRightdown{
+    width: calc(100% - 10px);
+    height: calc(30% - 10px);
+    float: left;
+  }

@@ -1,0 +1,56 @@
+.contain {
+    width: 100%;
+    height: 100%;
+    /* position: fixed; */
+    /* z-index: 100; */
+    /* left: 0;
+    top: 0; */
+  }
+.video{
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.videoCard{
+  margin: 5px;
+  width: calc(25% - 10px);
+  height: calc(100% - 10px);
+  float: left;
+}
+#Monitor{
+}
+.borderSelf{
+  height: 100%;
+  width: 50%;
+  position:absolute;
+}
+.borderLeft{
+  left: 0;
+  
+  background:rgba(0,0,0,0) url('../../assets/img/border2.png');
+  background-size: contain;
+  background-repeat:no-repeat;
+
+}
+.borderRight{
+  right: 0;
+  
+  background:rgba(0,0,0,0) url('../../assets/img/border1.png');
+  background-size: cover;
+  background-size: contain;
+  background-position:100% 100%;
+  background-repeat:no-repeat;
+}
+.MonHead{
+  float: left;
+  width: 20px;
+  height: 100%;
+  margin-left: 10px ;
+  display: flex;
+
+  text-align: center;
+  
+  align-items: center;
+  
+  writing-mode: vertical-rl;
+}

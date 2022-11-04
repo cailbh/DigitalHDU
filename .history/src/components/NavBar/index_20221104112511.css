@@ -1,0 +1,27 @@
+#navBar {
+  position: absolute;
+  top:60px;
+  left: 20%;
+  
+  /* top: 50px; */
+  width: calc(60%);
+  height: 50px; 
+  /* background-color: aqua; */
+}
+#navBarBody {
+  width: calc(100% - 90px);
+  height: 100%;
+  position: absolute;
+  left: 50px;
+  background: rgba(12, 46, 56,0) linear-gradient(-45deg, transparent 15px, rgba(12, 46, 56,1) 0);
+  box-shadow:  0px 0px 10px 2px #83FFFD;
+  /* border-left:50px solid transparent; */
+}
+.navLeft{
+  position:absolute;
+  left: 0;
+  height: 100%;
+  width: 50px;
+  /* background: rgb(12, 46, 56);
+  box-shadow: inset 0px 0px 10px 2px #83FFFD; */
+}

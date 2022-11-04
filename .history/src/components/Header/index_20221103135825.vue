@@ -1,0 +1,105 @@
+<template>
+  <!-- 头部 -->
+  <!-- <header class="header">
+    <div>
+      <b-nav tabs fill>
+        <b-nav-item active>Active</b-nav-item>
+        <b-nav-item>Link</b-nav-item>
+        <b-nav-item>Link with a long name </b-nav-item>
+        <b-nav-item disabled>Disabled</b-nav-item>
+      </b-nav>
+    </div>
+  </header> -->
+  <div class="head">
+    <div class="headLeft">
+      <div class="upHalf headLeftUp">
+        <div class="timeLogo"></div>
+        <span>{{weather.ymd}}</span><span>{{date}} </span>
+      </div>
+        <div class="downHalf">
+        </div>
+    </div>
+    <div class="headMid">
+      <div class="headMidUp">
+      </div>
+      <div class="headMidDown"> 
+        杭州电子科技大学数字孪生校园
+      </div>
+    </div>
+    <div class="headRight">
+      <div class="upHalf headRightUp">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span calss="key">pm1.0:</span><span calss="value" id="value_pm10">{{weather.pm10}} </span>&nbsp;&nbsp;
+        <span calss="key">pm2.5:</span><span calss="value"  id="value_pm25">{{weather.pm25}} </span>&nbsp;&nbsp;
+        <span calss="key">空气质量:</span><span calss="value"  id="value_qua">{{weather.quality}} </span>&nbsp;&nbsp;
+        <span calss="key">湿度:</span><span calss="value"  id="value_shi">{{weather.shidu}} </span>&nbsp;&nbsp;
+        <span calss="key">温度:</span><span calss="value"  id="value_wen">{{weather.wendu}} </span>&nbsp;&nbsp;
+      </div>
+      <div class="downHalf">
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>  
+export default {
+  data() {
+    return {
+      date:null,
+      cityName:'',
+      weather: {
+              type:'',
+              wendu:"18",
+              ganmao: '',
+              pm10: '--市／--℃',
+              pm25: '--',
+              quality: '0',
+              shidu: '',
+              ymd:""
+          },
+    }
+  },
+  methods: {
+    getDate(){},
+    // 获取天气
+    getTheWeather() {
+      const _this = this;
+      this.$axios
+        .get("/we/101210101")
+        .then((response) => { 
+          let data = response.data.data
+           _this.weather={
+              type:data.forecast[0]['type'],
+              wendu:data.wendu,
+              ganmao:data.ganmao,
+              pm10: data.pm10,
+              pm25: data.pm25,
+              quality: data.quality,
+              shidu: data.shidu,
+              ymd: data.ymd,
+           }
+          console.log(_this.weather )
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    },
+  },
+  mounted() {
+    
+    let _this = this; 
+    this.timer = setInterval(() => {
+      _this.date = new Date(); // 修改数据date
+      _this.getTheWeather()
+    }, 1000)
+  },
+  beforeDestroy() {
+    if (this.timer) {
+      clearInterval(this.timer); // 在Vue实例销毁前，清除我们的定时器
+    }
+  }
+};
+</script>
+<style>
+  @import '../../assets/style/head.css';
+</style>

@@ -14,6 +14,11 @@ module.exports = {
                     '^/api': ''
                 }
             },
+            '/we/*':{
+              target: 'http://t.weather.sojson.com/api/weather/city/',   // 要代理的接口地址
+              changeOrigin: true,                            // 允许跨域
+              pathRewrite: { '^/we': '' }            // 接口名重写
+            }
         },
 
     },

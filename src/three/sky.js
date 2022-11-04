@@ -16,7 +16,7 @@ const textureCube = textureCubeLoader.load([
   "6.jpg",
 ]);
 
-// scene.background = textureCube;
+scene.background = textureCube;
 // scene.environment = textureCube;
 }
 

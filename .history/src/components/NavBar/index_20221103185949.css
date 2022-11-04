@@ -1,0 +1,25 @@
+#navBar {
+  position: absolute;
+  top:60px;
+  left: 20%;
+  
+  /* top: 50px; */
+  width: calc(60%);
+  height: 50px; 
+  /* background-color: aqua; */
+}
+#navBarBody {
+  width: calc(100% - 10px);
+  height: 100%;
+  float: left;
+  background: rgb(12, 46, 56);
+  box-shadow: inset 0px 0px 10px 2px #83FFFD;
+}
+.navLeft{
+  position:absolute;
+  left: 0;
+  height: 100%;
+  width: 50px;
+  background: rgb(12, 46, 56);
+  box-shadow: inset 0px 0px 10px 2px #83FFFD;
+}

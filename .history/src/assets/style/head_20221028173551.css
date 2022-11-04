@@ -1,0 +1,108 @@
+.head{
+  width: 100%;
+  height: 100%; 
+  background: rgba(47, 100, 186,0);
+
+  color: rgb(255, 255, 255);
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 200%;
+  font-variant: tabular-nums;
+  font-feature-settings: "tnum";
+  font-family: SourceHanSerifCN-Heavy, SourceHanSerifCN;
+  text-align:center;
+  /* color: rgb(15, 198, 159); */
+  /* background:rgba(14, 31, 57, 0.881); */
+  /* background-image:-webkit-radial-gradient(left,rgba(14, 31, 57, 0),rgb(0, 0, 0)); */
+  /* background-image: linear-gradient(to right,rgba(14, 31, 57, 0),rgb(0, 0, 0)); */
+  /* background-image: linear-gradient(to top,rgba(14, 31, 57, 0),rgb(0, 0, 0)); */
+}
+.headLeft{
+  width: 30%;
+  height: 100%; 
+  float: left;
+  /* background-image: linear-gradient(to bottom,rgba(14, 31, 57, 0),rgb(0, 0, 0)); */
+  /* background: rgba(0, 0, 0, 0) url(../../assets/img/headleft.png);
+  background-size: cover */
+}
+.headMid{
+  width: 40%;
+  height: 100%; 
+  float: left; 
+  color: rgb(255, 255, 255);
+  font-weight: 600;
+  font-size: 36px;
+  line-height: 100%;
+  font-variant: tabular-nums;
+  font-feature-settings: "tnum";
+  font-family: SourceHanSerifCN-Heavy, SourceHanSerifCN;
+  text-align:center;
+  
+  /* background: rgba(47, 100, 186,0) url('../img/headMid.png');
+  background-size: cover; */
+  /* background-color: rgba(0,0,0,0) url(../../assets/img/headRight.png);
+  background-size: cover */
+}
+.headRight{
+  width: 30%;
+  height: 100%; 
+  float: left;
+  /* background-image: linear-gradient(to right,rgba(14, 31, 57, 0),rgb(0, 0, 0)); */
+  /* background: rgba(0,0,0,0) url(../../assets/img/headleft1.png);
+  background-size: cover */
+}
+.upHalf{
+  width: 100%;
+  height: 50%;
+  /* border-bottom: 1px solid  rgb(15, 198, 159) ; */
+}
+.downHalf{
+  width: 100%;
+  height: 50%;
+  
+  background-color: rgba(0,0,0,0) url(../../assets/img/headRight.png);
+  background-size: cover
+}
+
+.headRightUp{
+  background-image: linear-gradient(to left,rgba(82, 120, 225, 0),rgba(82, 120, 225, 0),rgb(82, 120, 225));
+}
+.headLeftUp{
+  background-image: linear-gradient(to right,rgba(82, 120, 225, 0),rgba(82, 120, 225, 0),rgb(82, 120, 225));
+}
+
+
+
+.headMidUp{
+  width: 100%;
+  height: 50%;
+  background-color: rgb(82, 120, 225);
+}
+.headMidDown{
+  width: 100%;
+  height: 100%;
+  background: rgba(47, 100, 186,0) url('../img/headMid.png');
+  background-size: cover;
+  background-position-y: -5px;
+}
+
+
+
+.upHalf.key{
+  color: rgb(254, 174, 50);
+}
+#value_pm10{
+   color: rgb(63, 203, 210);
+}
+#value_pm25{
+   color: rgb(64, 112, 177);
+}
+#value_shi{
+   color: rgb(222, 221, 156);
+}
+#value_wen{
+   color: rgb(148, 40, 21);
+}
+#value_qua{
+   color: rgb(101, 153, 99);
+}

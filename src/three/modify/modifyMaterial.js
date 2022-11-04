@@ -4,7 +4,7 @@ function modifyMaterial(mesh) {
   // TextureLoader创建一个纹理加载器对象，可以加载图片作为几何体纹理
   var textureLoader = new THREE.TextureLoader();
  // 加载纹理贴图
-  var texture = textureLoader.load('/textures/asphalt.jpg');
+  var texture = textureLoader.load('/textures/asphalt1.png');
 
   // // 加载法线/凹凸贴图
 //   var textureNB = textureLoader.load('/textures/asphalt.jpg');

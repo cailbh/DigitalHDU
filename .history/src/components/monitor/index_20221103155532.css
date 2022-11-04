@@ -1,0 +1,32 @@
+.contain {
+    width: 100%;
+    height: 100%;
+    /* position: fixed; */
+    /* z-index: 100; */
+    /* left: 0;
+    top: 0; */
+  }
+.video{
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.videoCard{
+  margin: 5px;
+  width: calc(25% - 10px);
+  height: calc(100% - 10px);
+  float: left;
+}
+#Monitor{
+  background:rgba(0,0,0,0) url('../../assets/img/border1.png')
+}
+.border{
+  height: 100%;
+  width: auto;
+}
+.borderLeft{
+  left: 0;
+}
+.borderRight{
+  right: 0;
+}

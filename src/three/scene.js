@@ -17,6 +17,6 @@ const textureCube = textureCubeLoader.load([
 ]);
 
 scene.background = textureCube;
-scene.environment = textureCube;
+// scene.environment = textureCube;
 
 export default scene;
