@@ -1,0 +1,34 @@
+.maintenanceContain {
+  width: 100%;
+  height: 100%;
+  /* position: fixed; */
+  /* z-index: 100; */
+  /* left: 0;
+  top: 0; */
+}
+.tableHead{
+  height: 30px;
+  border-bottom: 1px white solid;
+}
+#maintenanceContain {
+  width: 100%;
+  height: calc(100% - 30px);
+  overflow:scroll;
+  scrollbar-width: none;
+  /* position: fixed; */
+  /* z-index: 100; */
+  /* left: 0;
+  top: 0; */
+}
+.tableCard{
+  width: 100%;
+  height: 40px;
+}
+.col{
+  text-align: center;
+  color: white;
+  width: 25%;
+  height: 100%;
+  float: left;
+  line-height: 40px;
+}
