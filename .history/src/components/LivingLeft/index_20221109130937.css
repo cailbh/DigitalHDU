@@ -1,0 +1,33 @@
+.bar {
+    width: 100%;
+    height: 100%;
+    /* position: fixed; */
+    /* z-index: 100; */
+    /* left: 0;
+    top: 0; */
+  }
+  
+  #livingLeft {
+    position: absolute;
+    left: 0px;
+    top: 50px;
+    width: 20%;
+    height: calc(100% - 50px);
+    /* background-color: aqua; */
+  }
+  #livingLeftup{
+    width: calc(100% - 10px);
+    height: calc(35% - 10px);
+    float: left;
+  }
+  
+  #livingLeftmid{
+    width: calc(100% - 10px);
+    height: calc(35% - 10px);
+    float: left;
+  }
+  #livingLeftdown{
+    width: calc(100% - 10px);
+    height: calc(30% - 10px);
+    float: left;
+  }

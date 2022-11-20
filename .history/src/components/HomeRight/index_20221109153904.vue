@@ -1,0 +1,77 @@
+<!-- eslint-disable no-unused-vars -->
+<!-- eslint-disable no-unused-vars -->
+
+<template>
+	<div id="homeRight">     
+        <div id="homeRightup" class="panel">
+          <component :is="comUp" :currentProp="this.upProp" ></component>
+          <!-- <profile></profile> -->
+        </div>
+        <div id="homeRightmid" class="panel">
+          <component :is="comMid"></component>
+          <!-- <radar></radar> -->
+        </div>
+        <div id="homeRightdown" class="panel">
+          <component :is="comDown"></component>
+        </div>
+      </div>
+</template>
+  
+  <script>
+import * as d3 from "d3";
+import Head from "../../components/Header/index.vue"
+import emergency from "../../components/Emergency/index.vue";
+import radar from "../../components/Radar/index.vue";
+import profile from "../../components/HDUProfile/index.vue";
+import maintRecord from "../../components/MaintenanceRecords/index.vue"
+export default {
+  components: { radar, emergency, Head, maintRecord, profile},
+  // components: { button1 },
+  /* eslint-disable no-unused-vars */
+	data() {
+		return {
+      tp:"home",
+      comUp:"profile",
+      comMid:"emergency",
+      comDown:"maintRecord",
+		}
+	}, 
+  computed: {
+    upProp() {
+      switch (this.tp) {
+        case 'living':
+          return { type: "living"};
+        case 'home':
+          return { type: "home"};
+        default:
+          
+      }
+    },
+  },
+  watch: {
+    type(val){
+      let _this = this
+        if("Living" == val){
+          _this.tp = 'living';
+          setTimeout(()=>{
+          _this.comUp="profile";
+          }, 1000);
+        }
+        else if("Teaching" == val){
+          _this.tp = 'home';
+        setTimeout(()=>{
+          _this.comUp="profile";
+          }, 1000);
+        }
+      }
+  },
+  mounted(){
+    this.tp = 'home'
+  }
+  }
+  </script>
+  
+  <style>
+  @import './index.css';
+  </style>
+  
