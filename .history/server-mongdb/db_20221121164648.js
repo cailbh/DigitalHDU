@@ -42,10 +42,6 @@ const emergencySchema = mongoose.Schema({
     name:String,
     value:Number,
 })
-const maintenanceSchema = mongoose.Schema({
-    name:String,
-    value:Number,
-})
 /************** 定义模型Model **************/
 const Models = {
     Login: mongoose.model('Login', loginSchema),
@@ -55,8 +51,7 @@ const Models = {
     Worker: mongoose.model('worker',workersSchema,'Workers'),
     InNum: mongoose.model('inNum',inNumSchema,"InNum"),
     FlowRate: mongoose.model('flowRate',flowRateSchema,'FlowRate'),
-    Emergency: mongoose.model('emergency',emergencySchema,'Emergency'),
-    Maintenance: mongoose.model('maintenance',maintenanceSchema,'Maintenance')
+    Emergency: mongoose.model('emergency',emergencySchema,'Emergency')
 }
 
 module.exports = Models;

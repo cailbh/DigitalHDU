@@ -18,7 +18,7 @@ export default {
 			return {
 				geoCoordMap:{},
 				data:[],
-				InNumData:[],
+				InNumData:"",
 				myChart:null,
 				mcolor:[
 					"#0000CC",
@@ -51,7 +51,7 @@ export default {
 			getdata(){
 				const _this = this;
 					this.$http
-					.get('/api/inNum/getData', { params: {} }, {})
+					.get('/api/workers/getData', { params: {} }, {})
 					.then((response) => {
 						var body = response.body
 						_this.InNumData = body
@@ -74,6 +74,7 @@ export default {
 				const yData = datas.map((item) => item.value);
 				const max = Math.ceil(Math.max(...yData) * 1.2);
 				const maxData = datas.map((item) => item.could);
+				console.log(myColor, xData, yData, max, maxData)
 				var normalize = d3.scaleLinear().domain([0, max]).range([0, 1]);
 				let option = {
 					grid: {

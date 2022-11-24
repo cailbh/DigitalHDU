@@ -53,6 +53,7 @@ export default {
 					.get('/api/maintenance/getData', { params: {} }, {})
 					.then((response) => {
 						var body = response.body
+						console.log(body)
 						_this.data = body
 					})
 					.catch(function (error) {

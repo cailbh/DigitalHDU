@@ -34,16 +34,6 @@ export default {
       sceneTeaching:null,
       renderer:null,
       controls:null,
-      composer:null,
-      outlinePass:null,
-      outlineParams : {
-        edgeStrength: 3,
-        edgeGlow: 3,
-        edgeThickness: 4,
-        pulsePeriod: 5,
-        rotate: false,
-        usePatternTexture: false,
-        },
       windowWidth: document.documentElement.clientWidth, //实时屏幕宽度
       windowHeight: document.documentElement.clientHeight, //实时屏幕高度
     };
@@ -51,54 +41,27 @@ export default {
   watch: {
     type(val){
       let _this = this
-      let scene = _this.scene;
-      let camera = _this.camera;
-      let renderer = _this.renderer ;
-      let controls =  _this.controls;
+      let scene = _this.scene
+      let camera = _this.camera
+      let renderer = _this.renderer 
+      let controls =  _this.controls
       if(_this.sceneType != val){
-        _this.animateCameraFun(camera.position,controls.target,new THREE.Vector3(300,400,300),new THREE.Vector3(0,0,0));
+        _this.animateCameraFun(camera.position,controls.target,new THREE.Vector3(300,400,300),new THREE.Vector3(0,0,0))
         if("Living" == val){
-          _this.scene = _this.sceneLiving;
-          scene = _this.scene;
+          _this.scene = _this.sceneLiving
+          scene = _this.scene
+          create.Animate(controls,scene,camera,renderer)
         }
         else if("Teaching" == val){
-          _this.scene = _this.sceneTeaching;
-          scene = _this.scene;
+          _this.scene = _this.sceneTeaching
+          scene = _this.scene
+          create.Animate(controls,scene,camera,renderer)
         }
-        _this.sceneType = val;
-        _this.outline();
-        let composer = _this.composer;
-        create.Animate(controls,scene,camera,renderer,composer);
+        _this.sceneType = val
       }
     }
   },
   methods: {
-    outline(){ 
-      let _this = this;
-      let scene = _this.scene;
-      let camera = _this.camera;
-      let renderer = _this.renderer; 
-      let controls =  _this.controls;
-      let composer =  new EffectComposer(renderer);
-      composer.readBuffer.texture.encoding = THREE.sRGBEncoding;
-      composer.writeBuffer.texture.encoding = THREE.sRGBEncoding;
-      composer.addPass(new RenderPass(scene, camera));
-      _this.composer = composer
-      //线框渲染器新建
-      let params = _this.outlineParams;
-      let outlinePass = new OutlinePass(new THREE.Vector2(window.innerWidth, window.innerHeight), scene,camera);
-      //设置线框效果
-      outlinePass.edgeStrength = Number(params.edgeStrength);
-      outlinePass.edgeGlow = Number(params.edgeGlow);
-      outlinePass.edgeThickness = Number(params.edgeThickness);
-      outlinePass.pulsePeriod = Number(params.pulsePeriod);
-      outlinePass.visibleEdgeColor.set("rgb(65, 255, 250)");
-      outlinePass.hiddenEdgeColor.set("rgb(65, 255, 250)");
-      //效果组合渲染器中 加入线框渲染器
-      _this.composer.addPass(outlinePass);
-
-      _this.outlinePass = outlinePass
-    },
     //高亮显示模型（呼吸灯）
     outlineObj (selectedObjects) {
       let _this = this
@@ -107,29 +70,28 @@ export default {
       let renderer = _this.renderer 
       let controls =  _this.controls
       // 创建一个EffectComposer（效果组合器）对象，然后在该对象上添加后期处理通道。
-      let composer = new EffectComposer(renderer)
+      this.composer = new EffectComposer(renderer)
       // 新建一个场景通道  为了覆盖到原理来的场景上
-      let renderPass = new RenderPass(scene,camera)
-      composer.addPass(renderPass);
+      this.renderPass = new RenderPass(scene,camera)
+      this.composer.addPass(this.renderPass);
       // 物体边缘发光通道
-      let outlinePass = new OutlinePass(new THREE.Vector2(window.innerWidth, window.innerHeight), scene,camera, selectedObjects)
-      outlinePass.selectedObjects = selectedObjects
-      outlinePass.edgeStrength = 10.0 // 边框的亮度
-      outlinePass.edgeGlow = 1// 光晕[0,1]
-      outlinePass.usePatternTexture = false // 是否使用父级的材质
-      outlinePass.edgeThickness = 1.0 // 边框宽度
-      outlinePass.downSampleRatio = 1 // 边框弯曲度
-      outlinePass.pulsePeriod = 5 // 呼吸闪烁的速度
-      outlinePass.visibleEdgeColor.set(parseInt(0x00ff00)) // 呼吸显示的颜色
-      outlinePass.hiddenEdgeColor = new THREE.Color(0, 0, 0) // 呼吸消失的颜色
-      outlinePass.clear = true
-      composer.addPass(outlinePass)
+      this.outlinePass = new OutlinePass(new THREE.Vector2(window.innerWidth, window.innerHeight), scene,camera, selectedObjects)
+      this.outlinePass.selectedObjects = selectedObjects
+      this.outlinePass.edgeStrength = 10.0 // 边框的亮度
+      this.outlinePass.edgeGlow = 1// 光晕[0,1]
+      this.outlinePass.usePatternTexture = false // 是否使用父级的材质
+      this.outlinePass.edgeThickness = 1.0 // 边框宽度
+      this.outlinePass.downSampleRatio = 1 // 边框弯曲度
+      this.outlinePass.pulsePeriod = 5 // 呼吸闪烁的速度
+      this.outlinePass.visibleEdgeColor.set(parseInt(0x00ff00)) // 呼吸显示的颜色
+      this.outlinePass.hiddenEdgeColor = new THREE.Color(0, 0, 0) // 呼吸消失的颜色
+      this.outlinePass.clear = true
+      this.composer.addPass(this.outlinePass)
       // 自定义的着色器通道 作为参数
       var effectFXAA = new ShaderPass(FXAAShader)
       effectFXAA.uniforms.resolution.value.set(1 / window.innerWidth, 1 / window.innerHeight)
       effectFXAA.renderToScreen = true
-      composer.addPass(effectFXAA)
-      create.Animate(controls,scene,camera,renderer,composer)
+      this.composer.addPass(effectFXAA)
     },
         //获取鼠标坐标 处理点击某个模型的事件
     onmodelclick(event) {
@@ -147,21 +109,22 @@ export default {
     
       raycaster.setFromCamera(mouse, camera);
       const intersects = raycaster.intersectObjects(scene.children); // 获取点击到的模型的数组，从近到远排列
-  
+    
+      console.log(intersects);
     
 
 
-
+      this.outlineObj(intersects)
       var worldPosition = new THREE.Vector3(); // 初始化一个3D坐标，用来记录模型的世界坐标
       
       if (intersects.length) {
-         _this.outlinePass.selectedObjects = [intersects[0].object];
         // for ( var i = 0; i < intersects.length; i++ ) {
         //     intersects[i].object.material.color.set( 0xff0000 );
         // }
 
           // intersects[0].object.getWorldPosition(worldPosition); // 将点中的3D模型坐标记录到worldPosition中
           let box= new THREE.Box3().setFromObject(intersects[0].object);
+          console.log(box)
           worldPosition.x = box.min.x+(box.max.x - box.min.x)/2
           worldPosition.y =box.min.y+(box.max.y - box.min.y)
           worldPosition.z =box.min.z+(box.max.z - box.min.z)/2
@@ -183,6 +146,12 @@ export default {
               video.autoplay = "autoplay";
               var texture = new THREE.VideoTexture(video)
               texture.minFilter = THREE.LinearFilter
+              var material = new THREE.MeshPhongMaterial({
+                map: texture,
+              });
+              var geometry = new THREE.PlaneGeometry(108, 71);
+              var mesh = new THREE.Mesh(geometry, material);
+              mesh.userData.playbackRate = '1.0'
 
               // var texture = new THREE.TextureLoader().load(dataUrl);
     
@@ -193,8 +162,9 @@ export default {
 
               
               const v3 = new THREE.Vector3()
-              sprite.scale.set(10,10,10)
+              sprite.scale.set(100,100,100)
               let boxs= new THREE.Box3().setFromObject(sprite);
+              console.log(sprite,boxs.getSize(v3),v3)
 
               scene.add(sprite);
               sprite.position.set(worldPosition.x, worldPosition.y + v3.y/2, worldPosition.z); // 根据刚才获取的世界坐标设置精灵模型位置，高度加了3，是为了使精灵模型显示在点击模型的上方
@@ -264,12 +234,28 @@ export default {
     //添加辅助坐标轴
     // scene.add(axesHelper);
     //添加物体
+    // create.createBuildings('Living01',0,0,0);
+    // create.createBuildings('Living02',0,0,0);
+    // for(var i=0;i<30;i++){
+      
+    // create.createBuildings('Teaching02',i*30,0,i*30);
+    // }
+    // create.createBuildings('Teaching02',0,0,0);
+    // const files = require.context('../../../', true, /\.ifc$/)
+    // let pages = {};
+    // console.log(files)
+    // files.keys().forEach(key => {
+    //  console.log(key)
+    // })
     create.createBuildingGLTF(sceneTeaching,'Teaching_Ground',0,0,0);
-    create.createBuildingGLTF(sceneLiving,'Livinging_Ground',0,0,0);
-    create.createBuildingIFC(sceneTeaching,'生活区单独模型/2号楼',0,0,0);
-    create.createBuildingIFC(sceneLiving,'生活区单独模型/3号楼',0,0,0);
-    create.createBuildingIFC(sceneLiving,'生活区单独模型/4号楼北',0,0,0);
-    create.createBuildingIFC(sceneLiving,'生活区单独模型/4号楼南',0,0,0);
+    // create.createBuildingGLTF(sceneLiving,'Livinging_Ground',0,0,0);
+    create.createBuildingGLTF(sceneLiving,'123',0,0,0);
+    create.createBuildingIFC(sceneLiving,'树4',0,0,0);
+    // create.createBuildingIFC(sceneTeaching,'Teaching_library',0,0,0);
+    create.createBuildingIFC(sceneLiving,'生活区单独模型/2号楼',0,0,0);
+    // create.createBuildingIFC(sceneLiving,'生活区单独模型/3号楼',0,0,0);
+    // create.createBuildingIFC(sceneLiving,'生活区单独模型/4号楼北',0,0,0);
+    // create.createBuildingIFC(sceneLiving,'生活区单独模型/4号楼南',0,0,0);
     // console.log(filenames)
     // for(let i in filenames['Teaching']){
     //   let name = filenames['Teaching'][i]
@@ -280,35 +266,31 @@ export default {
     //   create.createBuildingIFC(sceneLiving,'生活区单独模型/'+name,0,0,0);
     // }
     // create.createBox(sceneLiving,1000,0,1000,0,0,0)
-    create.createAmbientLinght(sceneTeaching);
-    create.createDirectionalLight(sceneTeaching,1000,2000,1000);
-    create.createAmbientLinght(sceneLiving);
-    create.createDirectionalLight(sceneLiving,1000,2000,1000);
+    create.createAmbientLinght(sceneTeaching)
+    create.createDirectionalLight(sceneTeaching,1000,2000,1000)
+    create.createAmbientLinght(sceneLiving)
+    create.createDirectionalLight(sceneLiving,1000,2000,1000)
     
     // create.createPointLinght(500,800,500,10000,2)
     // changeSky("night")
     // create.Animate(controls,scene,camera,renderer)
-
-    //更改渲染器
-    
-    _this.scene = sceneTeaching;
-    _this.sceneLiving = sceneLiving;
-    _this.sceneTeaching = sceneTeaching;
-    _this.camera = camera;
-    _this.renderer = renderer;
-    _this.controls = controls;
-    _this.outline();
+    _this.scene = sceneTeaching
+    _this.sceneLiving = sceneLiving
+    _this.sceneTeaching = sceneTeaching
+    _this.camera = camera
+    _this.renderer = renderer
+    _this.controls = controls
   },
   mounted() {
     var _this = this
-    let scene = _this.scene;
-    let camera = _this.camera;
-    let renderer = _this.renderer; 
-    let controls =  _this.controls;
-    let composer = _this.composer;
+    console.log(11111,_this)
+    let scene = _this.scene
+    let camera = _this.camera
+    let renderer = _this.renderer 
+    let controls =  _this.controls
     this.$refs.sceneDiv.appendChild(renderer.domElement)
     this.$refs.sceneDiv.addEventListener("click", this.onmodelclick); // 监听点击事件
-    create.Animate(controls,scene,camera,renderer,composer)
+    create.Animate(controls,scene,camera,renderer)
 }
 } 
 </script>

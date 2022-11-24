@@ -74,6 +74,7 @@ export default {
 				const inData = datas.map((item) => item.inValue);
 				const outData = datas.map((item) => item.outValue);
 				const max = Math.max(Math.ceil(Math.max(...outData)),(Math.ceil(Math.max(...inData))));
+				console.log(max)
 				let option ={
 					color: ["#1ce0da", "#074af6"],
 					tooltip: {

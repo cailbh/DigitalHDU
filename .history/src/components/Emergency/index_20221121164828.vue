@@ -49,9 +49,10 @@ export default {
 			getdata(){
 				const _this = this;
 					this.$http
-					.get('/api/emergency/getData', { params: {} }, {})
+					.get('/api/inNum/getData', { params: {} }, {})
 					.then((response) => {
 						var body = response.body
+						console.log(body)
 						_this.EmergencyData = body
 					})
 					.catch(function (error) {

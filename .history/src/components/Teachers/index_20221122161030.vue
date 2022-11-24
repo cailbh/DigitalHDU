@@ -37,11 +37,6 @@ export default {
 				this.draw();
 			}
 		},
-		computed: {
-			TeachersData(val){//接收数据后绘制
-				this.getData();
-			}
-  		},
 		mounted() {
 			  
 			this.height = this.$refs.teaChart.clientHeight

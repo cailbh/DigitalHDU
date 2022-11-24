@@ -86,12 +86,11 @@ export default {
       controls.update();
       TWEEN.update();
       const time = clock.getElapsedTime();
-      requestAnimationFrame(animate);
+      requestAnimationFrame(renderer);
       // 使用渲染器渲染相机看这个场景的内容渲染出来
       renderer.render(scene, camera);
       if(composer){
-        
-        composer.render(scene, camera);
+        composer.render();
       }
     }
     animate()

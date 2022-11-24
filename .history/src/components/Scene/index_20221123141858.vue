@@ -79,11 +79,10 @@ export default {
       let camera = _this.camera;
       let renderer = _this.renderer; 
       let controls =  _this.controls;
-      let composer =  new EffectComposer(renderer);
-      composer.readBuffer.texture.encoding = THREE.sRGBEncoding;
-      composer.writeBuffer.texture.encoding = THREE.sRGBEncoding;
-      composer.addPass(new RenderPass(scene, camera));
-      _this.composer = composer
+      let composer = _this.composer;
+      _this.composer = new EffectComposer(renderer);
+      _this.composer.addPass(new RenderPass(scene, camera));
+
       //线框渲染器新建
       let params = _this.outlineParams;
       let outlinePass = new OutlinePass(new THREE.Vector2(window.innerWidth, window.innerHeight), scene,camera);
@@ -264,21 +263,19 @@ export default {
     //添加辅助坐标轴
     // scene.add(axesHelper);
     //添加物体
-    create.createBuildingGLTF(sceneTeaching,'Teaching_Ground',0,0,0);
-    create.createBuildingGLTF(sceneLiving,'Livinging_Ground',0,0,0);
-    create.createBuildingIFC(sceneTeaching,'生活区单独模型/2号楼',0,0,0);
-    create.createBuildingIFC(sceneLiving,'生活区单独模型/3号楼',0,0,0);
-    create.createBuildingIFC(sceneLiving,'生活区单独模型/4号楼北',0,0,0);
-    create.createBuildingIFC(sceneLiving,'生活区单独模型/4号楼南',0,0,0);
+    // create.createBuildingIFC(sceneTeaching,'生活区单独模型/2号楼',0,0,0);
+    // create.createBuildingIFC(sceneLiving,'生活区单独模型/3号楼',0,0,0);
+    // create.createBuildingIFC(sceneLiving,'生活区单独模型/4号楼北',0,0,0);
+    // create.createBuildingIFC(sceneLiving,'生活区单独模型/4号楼南',0,0,0);
     // console.log(filenames)
-    // for(let i in filenames['Teaching']){
-    //   let name = filenames['Teaching'][i]
-    //   create.createBuildingIFC(sceneTeaching,'教学区单独模型/'+name,0,0,0);
-    // }
-    // for(let i in filenames['Living']){
-    //   let name = filenames['Living'][i]
-    //   create.createBuildingIFC(sceneLiving,'生活区单独模型/'+name,0,0,0);
-    // }
+    for(let i in filenames['Teaching']){
+      let name = filenames['Teaching'][i]
+      create.createBuildingIFC(sceneTeaching,'教学区单独模型/'+name,0,0,0);
+    }
+    for(let i in filenames['Living']){
+      let name = filenames['Living'][i]
+      create.createBuildingIFC(sceneLiving,'生活区单独模型/'+name,0,0,0);
+    }
     // create.createBox(sceneLiving,1000,0,1000,0,0,0)
     create.createAmbientLinght(sceneTeaching);
     create.createDirectionalLight(sceneTeaching,1000,2000,1000);

@@ -52,6 +52,7 @@ export default {
 					.get('/api/emergency/getData', { params: {} }, {})
 					.then((response) => {
 						var body = response.body
+						console.log(body)
 						_this.EmergencyData = body
 					})
 					.catch(function (error) {

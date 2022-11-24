@@ -12,7 +12,7 @@ export default function createBuildingGTLF(scene,name,x,y,z) {
     dracoLoader.setDecoderPath('/draco/gltf/')
     gltfLoader.setDRACOLoader(dracoLoader)
   //2、使用加载器导入模型文件，这里注意，需要用在scene创建后
-    gltfLoader.load('/models/'+name+'.gltf', (gltf)=> {
+    gltfLoader.load('/models/'+name+'.gtlf', (gltf)=> {
     gltf.scene.scale.set(1, 1, 1)
     gltf.scene.position.set(x,y,z);
     gltf.scene.traverse(function (child) {

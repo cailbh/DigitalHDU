@@ -91,6 +91,8 @@ export default {
       renderer.render(scene, camera);
       if(composer){
         
+      composer.readBuffer.texture.encoding = THREE.sRGBEncoding;
+      composer.writeBuffer.texture.encoding = THREE.sRGBEncoding;
         composer.render(scene, camera);
       }
     }

@@ -28,7 +28,7 @@ router.get('/api/test/getData', (req, res) => {
         if (err) {
             res.send(err);
         } else {
-             
+            console.log("data", data, "data")
             res.send(data);
         }
     });
@@ -40,7 +40,7 @@ router.get('/api/teachers/getData', (req, res) => {
         if (err) {
             res.send(err);
         } else {
-             
+            console.log("data", data, "data")
             res.send(data);
         }
     });
@@ -52,7 +52,7 @@ router.get('/api/students/getData', (req, res) => {
         if (err) {
             res.send(err);
         } else {
-             
+            console.log("data", data, "data")
             res.send(data);
         }
     });
@@ -64,7 +64,7 @@ router.get('/api/workers/getData', (req, res) => {
         if (err) {
             res.send(err);
         } else {
-             
+            console.log("data", data, "data")
             res.send(data);
         }
     });
@@ -76,7 +76,7 @@ router.get('/api/inNum/getData', (req, res) => {
         if (err) {
             res.send(err);
         } else {
-             
+            console.log("data", data, "data")
             res.send(data);
         }
     });
@@ -88,7 +88,7 @@ router.get('/api/flowRate/getData', (req, res) => {
         if (err) {
             res.send(err);
         } else {
-             
+            console.log("data", data, "data")
             res.send(data);
         }
     });
@@ -100,19 +100,7 @@ router.get('/api/emergency/getData', (req, res) => {
         if (err) {
             res.send(err);
         } else {
-             
-            res.send(data);
-        }
-    });
-});
-// 获取维保记录接口
-router.get('/api/maintenance/getData', (req, res) => {
-    // 通过模型去查找数据库
-    models.Maintenance.find((err, data) => {
-        if (err) {
-            res.send(err);
-        } else {
-             
+            console.log("data", data, "data")
             res.send(data);
         }
     });
@@ -145,7 +133,7 @@ router.get('/api/cube/getNum', (req, res) => {
         if (err) {
             res.send(err);
         } else {
-             
+            console.log("data", data, "data")
             res.send([data]);
         }
     });

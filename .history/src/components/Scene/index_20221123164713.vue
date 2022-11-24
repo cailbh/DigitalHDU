@@ -281,9 +281,9 @@ export default {
     // }
     // create.createBox(sceneLiving,1000,0,1000,0,0,0)
     create.createAmbientLinght(sceneTeaching);
-    create.createDirectionalLight(sceneTeaching,1000,2000,1000);
+    // create.createDirectionalLight(sceneTeaching,1000,2000,1000);
     create.createAmbientLinght(sceneLiving);
-    create.createDirectionalLight(sceneLiving,1000,2000,1000);
+    // create.createDirectionalLight(sceneLiving,1000,2000,1000);
     
     // create.createPointLinght(500,800,500,10000,2)
     // changeSky("night")

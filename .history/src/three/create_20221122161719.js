@@ -90,8 +90,7 @@ export default {
       // 使用渲染器渲染相机看这个场景的内容渲染出来
       renderer.render(scene, camera);
       if(composer){
-        
-        composer.render(scene, camera);
+        composer.composer.render();
       }
     }
     animate()

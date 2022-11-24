@@ -38,14 +38,6 @@ const flowRateSchema = mongoose.Schema({
     inValue:Number,
     outValue:Number,
 })
-const emergencySchema = mongoose.Schema({
-    name:String,
-    value:Number,
-})
-const maintenanceSchema = mongoose.Schema({
-    name:String,
-    value:Number,
-})
 /************** 定义模型Model **************/
 const Models = {
     Login: mongoose.model('Login', loginSchema),
@@ -54,9 +46,7 @@ const Models = {
     Student: mongoose.model('student',studentsSchema,"Students"),
     Worker: mongoose.model('worker',workersSchema,'Workers'),
     InNum: mongoose.model('inNum',inNumSchema,"InNum"),
-    FlowRate: mongoose.model('flowRate',flowRateSchema,'FlowRate'),
-    Emergency: mongoose.model('emergency',emergencySchema,'Emergency'),
-    Maintenance: mongoose.model('maintenance',maintenanceSchema,'Maintenance')
+    FlowRate: mongoose.model('flowRate',flowRateSchema,'FlowRate')
 }
 
 module.exports = Models;

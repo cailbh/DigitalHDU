@@ -55,6 +55,7 @@ export default {
       let camera = _this.camera;
       let renderer = _this.renderer ;
       let controls =  _this.controls;
+      let composer = _this.composer;
       if(_this.sceneType != val){
         _this.animateCameraFun(camera.position,controls.target,new THREE.Vector3(300,400,300),new THREE.Vector3(0,0,0));
         if("Living" == val){
@@ -67,7 +68,6 @@ export default {
         }
         _this.sceneType = val;
         _this.outline();
-        let composer = _this.composer;
         create.Animate(controls,scene,camera,renderer,composer);
       }
     }
@@ -79,11 +79,10 @@ export default {
       let camera = _this.camera;
       let renderer = _this.renderer; 
       let controls =  _this.controls;
-      let composer =  new EffectComposer(renderer);
-      composer.readBuffer.texture.encoding = THREE.sRGBEncoding;
-      composer.writeBuffer.texture.encoding = THREE.sRGBEncoding;
-      composer.addPass(new RenderPass(scene, camera));
-      _this.composer = composer
+      let composer = _this.composer;
+      _this.composer = new EffectComposer(renderer);
+      _this.composer.addPass(new RenderPass(scene, camera));
+
       //线框渲染器新建
       let params = _this.outlineParams;
       let outlinePass = new OutlinePass(new THREE.Vector2(window.innerWidth, window.innerHeight), scene,camera);
@@ -92,8 +91,8 @@ export default {
       outlinePass.edgeGlow = Number(params.edgeGlow);
       outlinePass.edgeThickness = Number(params.edgeThickness);
       outlinePass.pulsePeriod = Number(params.pulsePeriod);
-      outlinePass.visibleEdgeColor.set("rgb(65, 255, 250)");
-      outlinePass.hiddenEdgeColor.set("rgb(65, 255, 250)");
+      outlinePass.visibleEdgeColor.set("#ffffff");
+      outlinePass.hiddenEdgeColor.set("#ffffff");
       //效果组合渲染器中 加入线框渲染器
       _this.composer.addPass(outlinePass);
 
@@ -264,12 +263,28 @@ export default {
     //添加辅助坐标轴
     // scene.add(axesHelper);
     //添加物体
-    create.createBuildingGLTF(sceneTeaching,'Teaching_Ground',0,0,0);
-    create.createBuildingGLTF(sceneLiving,'Livinging_Ground',0,0,0);
+    // create.createBuildings('Living01',0,0,0);
+    // create.createBuildings('Living02',0,0,0);
+    // for(var i=0;i<30;i++){
+      
+    // create.createBuildings('Teaching02',i*30,0,i*30);
+    // }
+    // create.createBuildings('Teaching02',0,0,0);
+    // const files = require.context('../../../', true, /\.ifc$/)
+    // let pages = {};
+    // console.log(files)
+    // files.keys().forEach(key => {
+    //  console.log(key)
+    // })
+    // create.createBuildingGLTF(sceneTeaching,'Teaching_Ground',0,0,0);
+    // // create.createBuildingGLTF(sceneLiving,'Livinging_Ground',0,0,0);
+    // create.createBuildingGLTF(sceneLiving,'123',0,0,0);
+    // create.createBuildingIFC(sceneLiving,'树4',0,0,0);
+    // create.createBuildingIFC(sceneTeaching,'Teaching_library',0,0,0);
     create.createBuildingIFC(sceneTeaching,'生活区单独模型/2号楼',0,0,0);
     create.createBuildingIFC(sceneLiving,'生活区单独模型/3号楼',0,0,0);
-    create.createBuildingIFC(sceneLiving,'生活区单独模型/4号楼北',0,0,0);
-    create.createBuildingIFC(sceneLiving,'生活区单独模型/4号楼南',0,0,0);
+    // create.createBuildingIFC(sceneLiving,'生活区单独模型/4号楼北',0,0,0);
+    // create.createBuildingIFC(sceneLiving,'生活区单独模型/4号楼南',0,0,0);
     // console.log(filenames)
     // for(let i in filenames['Teaching']){
     //   let name = filenames['Teaching'][i]

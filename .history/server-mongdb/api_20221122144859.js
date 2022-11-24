@@ -108,7 +108,7 @@ router.get('/api/emergency/getData', (req, res) => {
 // 获取维保记录接口
 router.get('/api/maintenance/getData', (req, res) => {
     // 通过模型去查找数据库
-    models.Maintenance.find((err, data) => {
+    models.Emergency.find((err, data) => {
         if (err) {
             res.send(err);
         } else {

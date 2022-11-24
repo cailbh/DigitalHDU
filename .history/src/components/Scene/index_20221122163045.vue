@@ -35,15 +35,6 @@ export default {
       renderer:null,
       controls:null,
       composer:null,
-      outlinePass:null,
-      outlineParams : {
-        edgeStrength: 3,
-        edgeGlow: 3,
-        edgeThickness: 4,
-        pulsePeriod: 5,
-        rotate: false,
-        usePatternTexture: false,
-        },
       windowWidth: document.documentElement.clientWidth, //实时屏幕宽度
       windowHeight: document.documentElement.clientHeight, //实时屏幕高度
     };
@@ -51,54 +42,27 @@ export default {
   watch: {
     type(val){
       let _this = this
-      let scene = _this.scene;
-      let camera = _this.camera;
-      let renderer = _this.renderer ;
-      let controls =  _this.controls;
+      let scene = _this.scene
+      let camera = _this.camera
+      let renderer = _this.renderer 
+      let controls =  _this.controls
       if(_this.sceneType != val){
-        _this.animateCameraFun(camera.position,controls.target,new THREE.Vector3(300,400,300),new THREE.Vector3(0,0,0));
+        _this.animateCameraFun(camera.position,controls.target,new THREE.Vector3(300,400,300),new THREE.Vector3(0,0,0))
         if("Living" == val){
-          _this.scene = _this.sceneLiving;
-          scene = _this.scene;
+          _this.scene = _this.sceneLiving
+          scene = _this.scene
+          create.Animate(controls,scene,camera,renderer)
         }
         else if("Teaching" == val){
-          _this.scene = _this.sceneTeaching;
-          scene = _this.scene;
+          _this.scene = _this.sceneTeaching
+          scene = _this.scene
+          create.Animate(controls,scene,camera,renderer)
         }
-        _this.sceneType = val;
-        _this.outline();
-        let composer = _this.composer;
-        create.Animate(controls,scene,camera,renderer,composer);
+        _this.sceneType = val
       }
     }
   },
   methods: {
-    outline(){ 
-      let _this = this;
-      let scene = _this.scene;
-      let camera = _this.camera;
-      let renderer = _this.renderer; 
-      let controls =  _this.controls;
-      let composer =  new EffectComposer(renderer);
-      composer.readBuffer.texture.encoding = THREE.sRGBEncoding;
-      composer.writeBuffer.texture.encoding = THREE.sRGBEncoding;
-      composer.addPass(new RenderPass(scene, camera));
-      _this.composer = composer
-      //线框渲染器新建
-      let params = _this.outlineParams;
-      let outlinePass = new OutlinePass(new THREE.Vector2(window.innerWidth, window.innerHeight), scene,camera);
-      //设置线框效果
-      outlinePass.edgeStrength = Number(params.edgeStrength);
-      outlinePass.edgeGlow = Number(params.edgeGlow);
-      outlinePass.edgeThickness = Number(params.edgeThickness);
-      outlinePass.pulsePeriod = Number(params.pulsePeriod);
-      outlinePass.visibleEdgeColor.set("rgb(65, 255, 250)");
-      outlinePass.hiddenEdgeColor.set("rgb(65, 255, 250)");
-      //效果组合渲染器中 加入线框渲染器
-      _this.composer.addPass(outlinePass);
-
-      _this.outlinePass = outlinePass
-    },
     //高亮显示模型（呼吸灯）
     outlineObj (selectedObjects) {
       let _this = this
@@ -151,11 +115,10 @@ export default {
     
 
 
-
+      this.outlineObj(intersects)
       var worldPosition = new THREE.Vector3(); // 初始化一个3D坐标，用来记录模型的世界坐标
       
       if (intersects.length) {
-         _this.outlinePass.selectedObjects = [intersects[0].object];
         // for ( var i = 0; i < intersects.length; i++ ) {
         //     intersects[i].object.material.color.set( 0xff0000 );
         // }
@@ -264,12 +227,28 @@ export default {
     //添加辅助坐标轴
     // scene.add(axesHelper);
     //添加物体
-    create.createBuildingGLTF(sceneTeaching,'Teaching_Ground',0,0,0);
-    create.createBuildingGLTF(sceneLiving,'Livinging_Ground',0,0,0);
+    // create.createBuildings('Living01',0,0,0);
+    // create.createBuildings('Living02',0,0,0);
+    // for(var i=0;i<30;i++){
+      
+    // create.createBuildings('Teaching02',i*30,0,i*30);
+    // }
+    // create.createBuildings('Teaching02',0,0,0);
+    // const files = require.context('../../../', true, /\.ifc$/)
+    // let pages = {};
+    // console.log(files)
+    // files.keys().forEach(key => {
+    //  console.log(key)
+    // })
+    // create.createBuildingGLTF(sceneTeaching,'Teaching_Ground',0,0,0);
+    // // create.createBuildingGLTF(sceneLiving,'Livinging_Ground',0,0,0);
+    // create.createBuildingGLTF(sceneLiving,'123',0,0,0);
+    // create.createBuildingIFC(sceneLiving,'树4',0,0,0);
+    // create.createBuildingIFC(sceneTeaching,'Teaching_library',0,0,0);
     create.createBuildingIFC(sceneTeaching,'生活区单独模型/2号楼',0,0,0);
-    create.createBuildingIFC(sceneLiving,'生活区单独模型/3号楼',0,0,0);
-    create.createBuildingIFC(sceneLiving,'生活区单独模型/4号楼北',0,0,0);
-    create.createBuildingIFC(sceneLiving,'生活区单独模型/4号楼南',0,0,0);
+    // create.createBuildingIFC(sceneLiving,'生活区单独模型/3号楼',0,0,0);
+    // create.createBuildingIFC(sceneLiving,'生活区单独模型/4号楼北',0,0,0);
+    // create.createBuildingIFC(sceneLiving,'生活区单独模型/4号楼南',0,0,0);
     // console.log(filenames)
     // for(let i in filenames['Teaching']){
     //   let name = filenames['Teaching'][i]
@@ -280,35 +259,30 @@ export default {
     //   create.createBuildingIFC(sceneLiving,'生活区单独模型/'+name,0,0,0);
     // }
     // create.createBox(sceneLiving,1000,0,1000,0,0,0)
-    create.createAmbientLinght(sceneTeaching);
-    create.createDirectionalLight(sceneTeaching,1000,2000,1000);
-    create.createAmbientLinght(sceneLiving);
-    create.createDirectionalLight(sceneLiving,1000,2000,1000);
+    create.createAmbientLinght(sceneTeaching)
+    create.createDirectionalLight(sceneTeaching,1000,2000,1000)
+    create.createAmbientLinght(sceneLiving)
+    create.createDirectionalLight(sceneLiving,1000,2000,1000)
     
     // create.createPointLinght(500,800,500,10000,2)
     // changeSky("night")
     // create.Animate(controls,scene,camera,renderer)
-
-    //更改渲染器
-    
-    _this.scene = sceneTeaching;
-    _this.sceneLiving = sceneLiving;
-    _this.sceneTeaching = sceneTeaching;
-    _this.camera = camera;
-    _this.renderer = renderer;
-    _this.controls = controls;
-    _this.outline();
+    _this.scene = sceneTeaching
+    _this.sceneLiving = sceneLiving
+    _this.sceneTeaching = sceneTeaching
+    _this.camera = camera
+    _this.renderer = renderer
+    _this.controls = controls
   },
   mounted() {
     var _this = this
-    let scene = _this.scene;
-    let camera = _this.camera;
-    let renderer = _this.renderer; 
-    let controls =  _this.controls;
-    let composer = _this.composer;
+    let scene = _this.scene
+    let camera = _this.camera
+    let renderer = _this.renderer 
+    let controls =  _this.controls
     this.$refs.sceneDiv.appendChild(renderer.domElement)
     this.$refs.sceneDiv.addEventListener("click", this.onmodelclick); // 监听点击事件
-    create.Animate(controls,scene,camera,renderer,composer)
+    create.Animate(controls,scene,camera,renderer)
 }
 } 
 </script>
