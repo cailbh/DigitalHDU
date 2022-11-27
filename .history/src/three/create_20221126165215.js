@@ -83,22 +83,20 @@ export default {
     renderer.shadowMap.enabled = true;
     return renderer;
   },
-  Animate:(controls,scene,camera,renderer,composer,finalComposer)=>{
-    var darkMaterial = new THREE.MeshBasicMaterial( { color: "black" } );
-    function darkenNonBloomed( obj ) {
-      var bloomLayer = new THREE.Layers();
-      bloomLayer.set( 1);
-      if ( obj.isMesh && bloomLayer.test( obj.layers ) === false ) {
-        materials[ obj.uuid ] = obj.material;
-        obj.material = darkMaterial;
-      }
+  Animate:(controls,scene,camera,renderer,composer)=>{
+    
+  function darkenNonBloomed( obj ) {
+    if ( obj.isMesh && bloomLayer.test( obj.layers ) === false ) {
+      materials[ obj.uuid ] = obj.material;
+      obj.material = darkMaterial;
     }
-    function restoreMaterial( obj ) {
-      if ( materials[ obj.uuid ] ) {
-        obj.material = materials[ obj.uuid ];
-        delete materials[ obj.uuid ];
-      }
+  }
+  function restoreMaterial( obj ) {
+    if ( materials[ obj.uuid ] ) {
+      obj.material = materials[ obj.uuid ];
+      delete materials[ obj.uuid ];
     }
+  }
     function animate(t) {
       controls.update();
       TWEEN.update();
@@ -106,18 +104,14 @@ export default {
       const time = clock.getElapsedTime();
       requestAnimationFrame(animate);
       renderer.outputEncoding = THREE.sRGBEncoding;
-        renderer.render(scene, camera);
-      // if(composer){
-      //   // camera.layers.set(1)
-      //   scene.traverse( darkenNonBloomed );
-      //   composer.render();
-      //   // // camera.layers.set(0)
-      //   scene.traverse( restoreMaterial );
-      //   finalComposer.render();
-      // }
-      // else{
-      //   renderer.render(scene, camera);
-      // }
+      if(composer){
+        scene.traverse( darkenNonBloomed );
+        composer.render();
+        scene.traverse( restoreMaterial );
+      }
+      else{
+      renderer.render(scene, camera);
+      }
     }
     animate()
   },

@@ -15,7 +15,6 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import TWEEN from '@tweenjs/tween.js'
 import * as THREE from "three";
 const clock = new THREE.Clock();
-var materials = {};
 export default {
   init:(camera,renderer)=>{
     // 更新摄像头
@@ -83,8 +82,9 @@ export default {
     renderer.shadowMap.enabled = true;
     return renderer;
   },
-  Animate:(controls,scene,camera,renderer,composer,finalComposer)=>{
+  Animate:(controls,scene,camera,renderer,composer)=>{
     var darkMaterial = new THREE.MeshBasicMaterial( { color: "black" } );
+    var materials = {};
     function darkenNonBloomed( obj ) {
       var bloomLayer = new THREE.Layers();
       bloomLayer.set( 1);
@@ -107,16 +107,15 @@ export default {
       requestAnimationFrame(animate);
       renderer.outputEncoding = THREE.sRGBEncoding;
         renderer.render(scene, camera);
-      // if(composer){
-      //   // camera.layers.set(1)
-      //   scene.traverse( darkenNonBloomed );
-      //   composer.render();
-      //   // // camera.layers.set(0)
-      //   scene.traverse( restoreMaterial );
-      //   finalComposer.render();
-      // }
+      if(composer){
+        camera.layers.set(1)
+        // scene.traverse( darkenNonBloomed );
+        composer.render();
+        camera.layers.set(0)
+        // scene.traverse( restoreMaterial );
+      }
       // else{
-      //   renderer.render(scene, camera);
+        // renderer.render(scene, camera);
       // }
     }
     animate()

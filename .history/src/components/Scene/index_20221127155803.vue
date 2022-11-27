@@ -81,13 +81,12 @@ export default {
           _this.scene = _this.sceneLiving;
           _this.composer = _this.composerLiving;
           _this.finalComposer = _this.finalComposerLiving;
-          _this.outlinePass = _this.outlinePassLiving;
+
         }
         else if("Teaching" == val){
           _this.scene = _this.sceneTeaching;
           _this.composer = _this.composerTeaching;
           _this.finalComposer = _this.finalComposerTeaching;
-          _this.outlinePass = _this.outlinePassTeaching
         }
         _this.sceneType = val;
         scene = _this.scene;
@@ -100,7 +99,6 @@ export default {
   },
   methods: {
     creatComposer(scene,camera,renderer){
-      let _this = this;
       let composer =  new EffectComposer(renderer);
       composer.readBuffer.texture.encoding = THREE.sRGBEncoding;
       composer.writeBuffer.texture.encoding = THREE.sRGBEncoding;

@@ -41,13 +41,7 @@ export default {
       controls:null,
       composer:null,
       finalComposer:null,
-      composerLiving:null,
-      finalComposerLiving:null,
-      composerTeaching:null,
-      finalComposerTeaching:null,
       outlinePass:null,
-      outlinePassLiving:null,
-      outlinePassTeaching:null,
       outlineParams : {
         edgeStrength: 3,
         edgeGlow: 3,
@@ -57,10 +51,10 @@ export default {
         usePatternTexture: false,
         },
       unrealBloomPassParams:{
-				exposure: 0.99,
-				bloomStrength: 1,
-				bloomThreshold: 1,
-				bloomRadius: 0.1
+				exposure: 1,
+				bloomStrength: 1.5,
+				bloomThreshold: 0,
+				bloomRadius: 0
 			  },
       windowWidth: document.documentElement.clientWidth, //实时屏幕宽度
       windowHeight: document.documentElement.clientHeight, //实时屏幕高度
@@ -79,103 +73,19 @@ export default {
         _this.animateCameraFun(camera.position,controls.target,new THREE.Vector3(300,400,300),new THREE.Vector3(0,0,0));
         if("Living" == val){
           _this.scene = _this.sceneLiving;
-          _this.composer = _this.composerLiving;
-          _this.finalComposer = _this.finalComposerLiving;
-          _this.outlinePass = _this.outlinePassLiving;
+          scene = _this.scene;
         }
         else if("Teaching" == val){
           _this.scene = _this.sceneTeaching;
-          _this.composer = _this.composerTeaching;
-          _this.finalComposer = _this.finalComposerTeaching;
-          _this.outlinePass = _this.outlinePassTeaching
+          scene = _this.scene;
         }
         _this.sceneType = val;
-        scene = _this.scene;
-        composer = _this.composer;
-        finalComposer = _this.finalComposer;
-        // _this.outline();
+        _this.outline();
         create.Animate(controls,scene,camera,renderer,composer,finalComposer);
       }
     }
   },
   methods: {
-    creatComposer(scene,camera,renderer){
-      let _this = this;
-      let composer =  new EffectComposer(renderer);
-      composer.readBuffer.texture.encoding = THREE.sRGBEncoding;
-      composer.writeBuffer.texture.encoding = THREE.sRGBEncoding;
-      composer.renderToScreen = false;
-      var renderPass = new RenderPass(scene, camera);
-      var effectCopy = new ShaderPass(THREE.CopyShader);//CopyShader是为了能将结果输出，普通的通道一般都是不能输出的，要靠CopyShader进行输出
-      effectCopy.renderToScreen = true;//设置这个参数的目的是马上将当前的内容输出
-
-      // var bloomPass = new BloomPass(3, 25, 0.1, 512);
-      let unParams = _this.unrealBloomPassParams;
-      var bloomPass = new UnrealBloomPass( new THREE.Vector2( window.innerWidth, window.innerHeight ), 1.5, 0.4, 0.85 );
-      bloomPass.threshold = unParams.bloomThreshold;
-      bloomPass.strength = unParams.bloomStrength;
-      bloomPass.radius = unParams.bloomRadius;
-      renderer.toneMappingExposure =Math.pow( unParams.exposure, 4.0 ) ;
-      composer.addPass(renderPass);//渲染当前场景
-      composer.addPass(bloomPass);
-      //线框渲染器新建
-      let params = _this.outlineParams;
-      let outlinePass = new OutlinePass(new THREE.Vector2(window.innerWidth, window.innerHeight), scene,camera);
-      //设置线框效果
-      outlinePass.edgeStrength = Number(params.edgeStrength);
-      outlinePass.edgeGlow = Number(params.edgeGlow);
-      outlinePass.edgeThickness = Number(params.edgeThickness);
-      outlinePass.pulsePeriod = Number(params.pulsePeriod);
-      outlinePass.visibleEdgeColor.set("rgb(65, 255, 250)");
-      outlinePass.hiddenEdgeColor.set("rgb(255, 255, 250)");
-      //效果组合渲染器中 加入线框渲染器
-      composer.addPass(outlinePass);
-
-      // 锯齿处理
-      let fxaaPass = new ShaderPass(FXAAShader)
-      const pixelRatio = renderer.getPixelRatio()
-      fxaaPass.material.uniforms[ 'resolution' ].value.x = 1 / (window.innerWidth * pixelRatio)
-      fxaaPass.material.uniforms[ 'resolution' ].value.y = 1 / (window.innerHeight * pixelRatio)
-      composer.addPass(fxaaPass)
-
-      const bloomVertext = `
-        varying vec2 vUv;
-        void main() {
-          vUv = uv;
-          gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
-        }
-        `;
-
-      const bloomFragment = `
-      uniform sampler2D baseTexture;
-      uniform sampler2D bloomTexture;
-      varying vec2 vUv;
-      void main() {
-        gl_FragColor = ( texture2D( baseTexture, vUv ) + vec4( 1.0 ) * texture2D( bloomTexture, vUv ) );
-      }
-      `;
-
-      const finalPass = new ShaderPass(
-        new THREE.ShaderMaterial({
-          uniforms: {
-            baseTexture: { value: null },
-            bloomTexture: { value: composer.renderTarget2.texture },
-          },
-          vertexShader: bloomVertext,
-          fragmentShader: bloomFragment,
-          defines: {},
-        }),
-        'baseTexture'
-      );
-      finalPass.needsSwap = true;
-      // 初始化实际效果合成器
-      let finalComposer = new EffectComposer(renderer);
-      finalComposer.addPass(fxaaPass)
-      finalComposer.addPass(renderPass);
-      finalComposer.addPass(finalPass);
-      return [composer,finalComposer,outlinePass]
-    },
-    
     outline(){ 
       let _this = this;
       let scene = _this.scene;
@@ -185,7 +95,7 @@ export default {
       let composer =  new EffectComposer(renderer);
       composer.readBuffer.texture.encoding = THREE.sRGBEncoding;
       composer.writeBuffer.texture.encoding = THREE.sRGBEncoding;
-      composer.renderToScreen = false;
+      // composer.renderToScreen = false;
       var renderPass = new RenderPass(scene, camera);
       var effectCopy = new ShaderPass(THREE.CopyShader);//CopyShader是为了能将结果输出，普通的通道一般都是不能输出的，要靠CopyShader进行输出
       effectCopy.renderToScreen = true;//设置这个参数的目的是马上将当前的内容输出
@@ -193,10 +103,9 @@ export default {
       // var bloomPass = new BloomPass(3, 25, 0.1, 512);
       let unParams = _this.unrealBloomPassParams;
       var bloomPass = new UnrealBloomPass( new THREE.Vector2( window.innerWidth, window.innerHeight ), 1.5, 0.4, 0.85 );
-      bloomPass.threshold = unParams.bloomThreshold;
-      bloomPass.strength = unParams.bloomStrength;
-      bloomPass.radius = unParams.bloomRadius;
-      renderer.toneMappingExposure =Math.pow( unParams.exposure, 4.0 ) ;
+				bloomPass.threshold = unParams.bloomThreshold;
+				bloomPass.strength = unParams.bloomStrength;
+				bloomPass.radius = unParams.bloomRadius;
       composer.addPass(renderPass);//渲染当前场景
 
       composer.addPass(bloomPass);
@@ -270,12 +179,58 @@ export default {
     );
     finalPass.needsSwap = true;
     // 初始化实际效果合成器
-    let finalComposer = new EffectComposer(renderer);
-    finalComposer.addPass(fxaaPass)
+    finalComposer = new EffectComposer(renderer);
+
     finalComposer.addPass(renderPass);
     finalComposer.addPass(finalPass);
 
     _this.finalComposer = finalComposer;
+
+    },
+    //高亮显示模型（呼吸灯）
+    outlineObj (selectedObjects) {
+      let _this = this
+      let scene = _this.scene
+      let camera = _this.camera
+      let renderer = _this.renderer 
+      let controls =  _this.controls
+      
+      let finalComposer = this.finalComposer;
+      // 创建一个EffectComposer（效果组合器）对象，然后在该对象上添加后期处理通道。
+      // const parameters = {
+			// 		stencilBuffer: true
+			// 	};
+        var renderTarget = new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight, {
+          encoding: THREE.sRGBEncoding
+        });
+      // const renderTarget = new THREE.WebGLRenderTarget( window.innerWidth, window.innerHeight, parameters );
+      let composer = new EffectComposer(renderer, renderTarget);
+      // 新建一个场景通道  为了覆盖到原理来的场景上
+      let renderPass = new RenderPass(scene,camera)
+      composer.addPass(renderPass);
+      // 物体边缘发光通道
+      let outlinePass = new OutlinePass(new THREE.Vector2(window.innerWidth, window.innerHeight), scene,camera, selectedObjects)
+      outlinePass.selectedObjects = selectedObjects
+      outlinePass.edgeStrength = 10.0 // 边框的亮度
+      outlinePass.edgeGlow = 1// 光晕[0,1]
+      outlinePass.usePatternTexture = false // 是否使用父级的材质
+      outlinePass.edgeThickness = 1.0 // 边框宽度
+      outlinePass.downSampleRatio = 1 // 边框弯曲度
+      outlinePass.pulsePeriod = 5 // 呼吸闪烁的速度
+      outlinePass.visibleEdgeColor.set(parseInt(0x00ff00)) // 呼吸显示的颜色
+      outlinePass.hiddenEdgeColor = new THREE.Color(0, 0, 0) // 呼吸消失的颜色
+      outlinePass.clear = true
+      composer.addPass(outlinePass)
+      // 自定义的着色器通道 作为参数
+      var effectFXAA = new ShaderPass(FXAAShader)
+      effectFXAA.uniforms.resolution.value.set(1 / window.innerWidth, 1 / window.innerHeight)
+      effectFXAA.renderToScreen = true
+      const pixelRatio = renderer.getPixelRatio()
+      effectFXAA.material.uniforms[ 'resolution' ].value.x = 1 / (window.innerWidth * pixelRatio)
+      effectFXAA.material.uniforms[ 'resolution' ].value.y = 1 / (window.innerHeight * pixelRatio)
+
+      composer.addPass(effectFXAA)
+      create.Animate(controls,scene,camera,renderer,composer,finalComposer)
     },
         //获取鼠标坐标 处理点击某个模型的事件
     onmodelClick(event) {
@@ -688,7 +643,6 @@ export default {
     let sceneTeaching = create.Scene();
     let camera = create.PerspectiveCamera();
     let renderer = create.Rendererr();
-    renderer.toneMapping = THREE.ReinhardToneMapping;
     let controls = create.Controls(camera,renderer);
     _this.initShaderMaterialsData() // 初始化着色器材质
     create.init(camera,renderer);
@@ -731,17 +685,7 @@ export default {
     _this.camera = camera;
     _this.renderer = renderer;
     _this.controls = controls;
-    // _this.outline();
-    let ans0 = _this.creatComposer(sceneLiving,camera,renderer)
-    _this.composerLiving = ans0[0];
-    _this.finalComposerLiving = ans0[1];
-    _this.outlinePassLiving = ans0[2];
-    let ans1 = _this.creatComposer(sceneTeaching,camera,renderer)
-    _this.composerTeaching = ans1[0];
-    _this.finalComposerTeaching = ans1[1];
-    _this.outlinePassTeaching = ans1[2];
-    _this.composer = _this.composerTeaching;
-    _this.finalComposer = _this.finalComposerTeaching;
+    _this.outline();
   },
   mounted() {
     var _this = this
@@ -750,7 +694,7 @@ export default {
     let renderer = _this.renderer; 
     let controls =  _this.controls;
     let composer = _this.composer;
-    let finalComposer = _this.finalComposer;
+    let finalComposer = this.finalComposer;
     this.$refs.sceneDiv.appendChild(renderer.domElement)
     this.$refs.sceneDiv.appendChild(stats.domElement);
     this.$refs.sceneDiv.addEventListener("click", this.onmodelClick); // 监听点击事件

@@ -23,6 +23,8 @@ export default function createBuildingGTLF(scene,name,x,y,z) {
         if(child.isMesh) {
             child.material.emissiveMap = child.material.map; 
             child.material.emissive =  child.material.color;
+            child.material.emissiveMap = child.material.map ;
+           
           }
     });
     gltf.scene.name = name

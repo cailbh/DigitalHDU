@@ -26,6 +26,7 @@
     "mongodb": "^4.5.0",
     "mongoose": "^6.3.0",
     "mysql": "^2.18.1",
+    "stats.js": "^0.17.0",
     "sunburst-chart": "^1.15.3",
     "three": "^0.145.0",
     "treemap-chart": "^1.5.2",

@@ -5,7 +5,8 @@ import createBuildingIFC from './model/buildingIFC';
 import createBuildingOBJ from './model/buildingOBJ';
 import createBuildingGLTF from './model/buildingGLTF';
 // import createScene from './model/scene';
-import stats from './Stats'
+
+import Stats  from 'three/examples/jsm/libs/stats.module'
 import createPointLinght from './modify/pointLinght'
 import createDirectionalLight from './modify/directionalLight'
 import createAmbientLinght from './modify/ambientLinght'
@@ -15,7 +16,13 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import TWEEN from '@tweenjs/tween.js'
 import * as THREE from "three";
 const clock = new THREE.Clock();
-var materials = {};
+//stats对象初始化  
+let stats = new Stats();  
+stats.domElement.style.position = 'absolute'; //绝对坐标  
+stats.domElement.style.left = '100px';// (0,0)px,左上角  
+stats.domElement.style.top = '100px';  
+document.getElementById('sceneContainer').appendChild(stats.domElement);
+
 export default {
   init:(camera,renderer)=>{
     // 更新摄像头
@@ -83,22 +90,7 @@ export default {
     renderer.shadowMap.enabled = true;
     return renderer;
   },
-  Animate:(controls,scene,camera,renderer,composer,finalComposer)=>{
-    var darkMaterial = new THREE.MeshBasicMaterial( { color: "black" } );
-    function darkenNonBloomed( obj ) {
-      var bloomLayer = new THREE.Layers();
-      bloomLayer.set( 1);
-      if ( obj.isMesh && bloomLayer.test( obj.layers ) === false ) {
-        materials[ obj.uuid ] = obj.material;
-        obj.material = darkMaterial;
-      }
-    }
-    function restoreMaterial( obj ) {
-      if ( materials[ obj.uuid ] ) {
-        obj.material = materials[ obj.uuid ];
-        delete materials[ obj.uuid ];
-      }
-    }
+  Animate:(controls,scene,camera,renderer,composer)=>{
     function animate(t) {
       controls.update();
       TWEEN.update();
@@ -106,18 +98,13 @@ export default {
       const time = clock.getElapsedTime();
       requestAnimationFrame(animate);
       renderer.outputEncoding = THREE.sRGBEncoding;
-        renderer.render(scene, camera);
-      // if(composer){
-      //   // camera.layers.set(1)
-      //   scene.traverse( darkenNonBloomed );
-      //   composer.render();
-      //   // // camera.layers.set(0)
-      //   scene.traverse( restoreMaterial );
-      //   finalComposer.render();
-      // }
-      // else{
-      //   renderer.render(scene, camera);
-      // }
+      if(composer){
+        composer.render();
+      }
+      else{
+      // 使用渲染器渲染相机看这个场景的内容渲染出来
+      renderer.render(scene, camera);
+      }
     }
     animate()
   },
