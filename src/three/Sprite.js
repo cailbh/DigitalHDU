@@ -9,6 +9,10 @@ var spriteMaterial= new SpriteMaterial({
   sprite1.scale.set(0.3, 0.3, 0.2); //精灵大小
   //以上，再多弄几个精灵，分别绑到不同的建筑上面
 //   // 把精灵模型插入到模型对象的父对象下面
+      // // 把精灵模型插入到模型对象的父对象下面
+      // mesh.add(sprite);
+      // // 父对象group位置变化,网格模型及其对象的标签同样发生变化
+      // mesh.position.set(10, 0, 0);
 //   sprite1.translateZ(1);
 //   sprite1.translateY(1);
   export default sprite1;

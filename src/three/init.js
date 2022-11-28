@@ -1,7 +1,7 @@
 //初始化组件
 import camera from "./camera";
 import renderer from "./renderer";
-
+import CSSRender from "./CSSRender";
 // 更新摄像头
 camera.aspect = window.innerWidth / window.innerHeight;
 //   更新摄像机的投影矩阵
@@ -14,6 +14,10 @@ window.addEventListener("resize", () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   //   更新摄像机的投影矩阵
   camera.updateProjectionMatrix();
+  //   更新渲染器
+  CSSRender.setSize(window.innerWidth, window.innerHeight);
+  //   设置渲染器的像素比例
+  CSSRender.setPixelRatio(window.devicePixelRatio);
 
   //   更新渲染器
   renderer.setSize(window.innerWidth, window.innerHeight);

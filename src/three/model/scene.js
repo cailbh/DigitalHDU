@@ -24,7 +24,7 @@ import { IFCLoader } from 'three/examples/jsm/loaders/IFCLoader.js'
 //           item.castShadow = true
 //           item.receiveShadow = true
 //         })
-        
+
 //     scene.add(obj);
 //     })
 // }, (res)=>{
@@ -35,23 +35,23 @@ import { IFCLoader } from 'three/examples/jsm/loaders/IFCLoader.js'
 // );
 // }
 
-  
+
 export default function createScene() {
 
   const ifcLoader = new IFCLoader();
   ifcLoader.ifcManager.setWasmPath("ifc/")
-// 2、使用加载器导入模型文件
-ifcLoader.load('/models/Living.ifc', (obj)=> {
-  // obj.castShadow = true
-  // obj.receiveShadow = true
-  // obj.position.set(-800,0,800)
-  obj.scale.set(0.5,0.5,0.5)
-  console.log(obj)
-  scene.add(obj);
-}, (res)=>{
-  // console.log(res.total, res.loaded)
-},(e)=>{
-  console.log("导入失败",e);
-}
-);
+  // 2、使用加载器导入模型文件
+  ifcLoader.load('/models/Living.ifc', (obj) => {
+    // obj.castShadow = true
+    // obj.receiveShadow = true
+    // obj.position.set(-800,0,800)
+    obj.scale.set(0.5, 0.5, 0.5)
+    console.log(obj)
+    scene.add(obj);
+  }, (res) => {
+    // console.log(res.total, res.loaded)
+  }, (e) => {
+    console.log("导入失败", e);
+  }
+  );
 }

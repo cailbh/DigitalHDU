@@ -2,59 +2,75 @@
 <!-- eslint-disable no-unused-vars -->
 
 <template>
-     <div class="contain" >
-           <div id="Monitor">
-           <div  class="MonHead">重点位置监控</div>
-           <div  class="MonBody">
-                <div class = "videoCard" v-for="(item,i) in vedioList" :key="item.id" >
-                           
-                     <video muted="muted" :id="item.id" class="video" :src="item.path" type="video/mp4" poster="false.png" autoplay="autoplay" controls="controls" loop="-1">
-                             <p>你的浏览器不支持video标签.</p>
-                     </video>
-                     <div class = "videoName">{{item.name}}</div>  
-             </div>
-           </div>
-           </div>
-           <div class="borderSelf borderLeft"></div>
-           <div class="borderSelf borderRight"></div>
-           
-      </div>
- </template>
-   
-   <script>
-   import {noteBtn} from "three/noteBtnVideo"
+     <!-- 视频播放弹窗 -->
+     <div class="video_box">
+          <a-modal :visible="visible" centered @ok="handleOk" @cancel="handleCancel">
+               <video v-if="playState" width="550" height="400" id="video_play" controls preload
+                    webkit-playsinline="webkit-playsinline" playsinline="" controlslist="nodownload"
+                    x-webkit-airplay="allow" x5-playsinline="" src="../../assets/wumingzhibei.mp4" ref="vueRef"></video>
+          </a-modal>
+     </div>
+</template>
 
-   var note1 = new noteBtn();
-   note1.element.addEventListener('click', beginVideo());
- export default {
-     
-           data() {
-                return {
-                     vedioList: [{ path: '/videos/1.mp4',id:0,name:"南大门出入口" }, { path:         
-              "/videos/2.mp4",id:1,name:"生活区东门" },
-             { path: "/videos/3.mp4",id:2 ,name:"生活区东门"}, { path: 
-              "/videos/4.mp4",id:3,name:"生活区东门" }],
-                }
-           },
-           mounted() {
-                // this.draw();
-                for (var i = 0; i < 4; i++) {
-         //获取四个视频的id
-             var video = document.getElementById(i);
-         //调用video标签的播放函数
-             video.play();
-         }
-           },
-           methods: {
-                beginVideo()
-                {
-if()
-                },
-           }
-   }
-   </script>
+<script>
+import { noteBtn } from "three/noteBtnVideo"
+
+var note1 = new noteBtn();
+var isbegin = false;
+note1.element.addEventListener('click', beginVideo());
+
+export default {
+     data() {
+          return {
+               vedioList: [{ path: '/videos/1.mp4', id: 0, name: "南大门出入口" }, {
+                    path:
+                         "/videos/2.mp4", id: 1, name: "生活区东门"
+               },
+               { path: "/videos/3.mp4", id: 2, name: "生活区东门" }, {
+                    path:
+                         "/videos/4.mp4", id: 3, name: "生活区东门"
+               }],
+          }
+     },
+     mounted() {
+          // this.draw();
+          for (var i = 0; i < 4; i++) {
+               //获取四个视频的id
+               var video = document.getElementById(i);
+               //调用video标签的播放函数
+               video.play();
+          }
+     },
+     methods: {
+          beginVideo() {
+               if (isbegin == false) {
+                    isbegin = true;
+                    //获取精灵id匹配到对应视频的id，把对应的视频可见度和声音改变
+               }
+          },
+           // 视频弹框
+    showModal() {
+      this.visible = true;
+      this.playState = true;
+    },
+    handleOk(e) {
+      this.visible = false;
+      this.playState = false;
+      // setTimeout(() => {
+      //   this.visible = false;
+      // }, 2000);
+      console.log(this.$refs.vueRef,666)
+      this.$refs.vueRef.pause();//暂停
+    },
+    handleCancel(e) {
+      this.visible = false;
+      this.$refs.vueRef.pause();//暂停
+    },
+     }
+}
+</script>
    
-   <style>
-   @import './index.css';
-   </style>
+<style>
+@import './index.css';
+</style>
    
