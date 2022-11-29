@@ -14,7 +14,6 @@ import animate  from './animate';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import TWEEN from '@tweenjs/tween.js'
 import * as THREE from "three";
-import { utimes } from 'fs';
 const clock = new THREE.Clock();
 var materials = {};
 export default {
@@ -86,14 +85,6 @@ export default {
   },
   Animate:(controls,scene,camera,renderer,composer,finalComposer)=>{
     var darkMaterial = new THREE.MeshBasicMaterial( { color: "black" } );
-    var scanConfig = {
-      value: -1.0,
-      start: 0,
-      end: 0,
-      during: 3,
-    }
-    var uHeight = - 1.0;
-    var uTime = 0.1;
     function darkenNonBloomed( obj ) {
       var bloomLayer = new THREE.Layers();
       bloomLayer.set( 1);
@@ -108,99 +99,14 @@ export default {
         delete materials[ obj.uuid ];
       }
     }
-    function calcHeight() {
-      let length = scanConfig.end - scanConfig.start;
-      // 扫描动态效果实现
-      uHeight += length / scanConfig.during / 8;
-      if (uHeight >= scanConfig.end-10.5) {
-        uHeight = scanConfig.start;
-      }
-    }
-    function boxScan(obj){
-      const uperVertext = `
-          varying vec3 vPosition;
-          varying vec2 vUv;
-          void main()
-          {
-            vUv = uv;
-            vPosition = position;
-            gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1 );
-          }
-          `;
-
-          const uperFragment = `
-          varying vec3 vPosition;
-            uniform float uHeight;
-            uniform vec4 uFlowColor;
-            uniform vec4 uModelColor;
-            varying vec2 vUv;
-            uniform float uTime;
-            vec2 rotate(vec2 uv, float rotation, vec2 mid) {
-              return vec2(cos(rotation) * (uv.x - mid.x) + sin(rotation) * (uv.y - mid.y) + mid.x, cos(rotation) * (uv.y - mid.y) - sin(rotation) * (uv.x - mid.x) + mid.y);
-            }
-          void main()
-          {
-            // vec2 rotateUv = rotate(vUv, -uTime , vec2(0.5));
-            // float angle = atan(rotateUv.y - 0.5, rotateUv.x - 0.5);
-            // float strengthr = mod((angle + 3.14) / 6.28 * 8.0, 1.0);
-            // float strengthr = mod(uTime * uTime , 1.0);
-            //模型的基础颜色
-          vec4 distColor=uModelColor;
-          // 流动范围当前点z的高度加上流动线的高度
-          float topY = uHeight +1.2;
-          if (uHeight < vPosition.y && vPosition.y < topY) {
-          // 颜色渐变 
-            // distColor = vec4(0,strengthr, strengthr, 1.0);
-            distColor = vec4(0,0.5, 0.5, 1.0);
-          }
-
-          gl_FragColor = distColor;
-          }`;
-      let shaderMaterial = new THREE.ShaderMaterial({
-        transparent: true,
-        side: THREE.DoubleSide,
-        depthWrite: false,
-        colorWrite : false,
-        uniforms: {
-          uHeight:  { value: uHeight,},
-          uTime: { value: uTime,},
-          uFlowColor: {
-            value: new THREE.Vector4(1.0, 0.0, 0.0, 1.0),
-          },
-          uModelColor: {
-            value: new THREE.Vector4(0.0, 0.0, 0.0, 0.0),
-          },
-        },
-        vertexShader: uperVertext,
-        fragmentShader: uperFragment,
-      })
-      if(obj.name == 'box'){
-
-      obj.material = shaderMaterial;
-      // obj.material.depthWrite = false; 
-      // let box= 
-      let boundingBox = new THREE.Box3().setFromObject(obj);
-      // 初始化扫描配置,y轴上下需留出一定空间，防止把上下平面扫描出来
-      scanConfig.start = -(boundingBox.max.y-boundingBox.min.y)/2+0.5;
-      scanConfig.end = boundingBox.max.y-0.5;
-      uTime += 0.1;
-      if(uHeight<scanConfig.start||uHeight>scanConfig.end)uHeight = scanConfig.start;
-      }
-      // if ( obj.isMesh && bloomLayer.test( obj.layers ) === false ) {
-      //   materials[ obj.uuid ] = obj.material;
-      //   obj.material = darkMaterial;
-      // }
-    }
     function animate(t) {
       controls.update();
       TWEEN.update();
       stats.update();
       const time = clock.getElapsedTime();
-      requestAnimationFrame(animate); 
+      requestAnimationFrame(animate);
       renderer.outputEncoding = THREE.sRGBEncoding;
         // renderer.render(scene, camera);
-      // scene.traverse(boxScan);
-      // calcHeight()
       if(composer){
         // camera.layers.set(1)
         scene.traverse( darkenNonBloomed );

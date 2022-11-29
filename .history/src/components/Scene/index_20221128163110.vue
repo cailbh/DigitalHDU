@@ -335,7 +335,6 @@ export default {
             ////---------------------------悬浮图表
             let label = document.createElement('div');
             label.className = "buildingLabel";
-            // let
 
             // 将dom节点转换为base64编码的图片
             this.$refs.sceneDiv.appendChild(label);
@@ -356,7 +355,7 @@ export default {
               this.$refs.sceneDiv.removeChild(label);
             })
             .catch(function (error) {
-              console.error('wrong!', error);
+              console.error('oops, something went wrong!', error);
             });
             ////----------------------------------video
               // let video = document.createElement('video');

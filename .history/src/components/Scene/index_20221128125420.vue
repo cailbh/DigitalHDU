@@ -309,20 +309,20 @@ export default {
       });
       
       if (intersects.length) {
-        let obj = intersects[0].object
-        let objName = obj.name.split("/");
-        if((filenames['Teaching'].indexOf(objName[objName.length-1])>0)||((filenames['Living'].indexOf(objName[objName.length-1])>0))){
-        //  _this.outlinePass.selectedObjects = [intersects[0].object];
-          obj.layers.toggle(1);
+        var object = intersects[ 0 ].object;
+          object.layers.toggle( 1 );
         // intersects[0].object.add(new THREE.LineSegments(intersects[0].object.geometry, lineMaterial));
 
           // intersects[0].object.getWorldPosition(worldPosition); // 将点中的3D模型坐标记录到worldPosition中
-          let box= new THREE.Box3().setFromObject(obj);
+          let box= new THREE.Box3().setFromObject(intersects[0].object);
+
+              
+
           worldPosition.x = box.min.x+(box.max.x - box.min.x)/2
           worldPosition.y =box.min.y+(box.max.y - box.min.y)/2
           worldPosition.z =box.min.z+(box.max.z - box.min.z)/2
 
-          // create.createBox(scene,(box.max.x - box.min.x)+1,(box.max.y - box.min.y),(box.max.z - box.min.z)+1,worldPosition.x,worldPosition.y,worldPosition.z);
+          create.createBox(scene,(box.max.x - box.min.x)+1,(box.max.y - box.min.y),(box.max.z - box.min.z)+1,worldPosition.x,worldPosition.y,worldPosition.z);
 
           var target1 = worldPosition
           var newPos = new THREE.Vector3(worldPosition.x + 100, worldPosition.y +(box.max.y - box.min.y),worldPosition.z + 100);
@@ -333,53 +333,35 @@ export default {
           // camera.lookAt(worldPosition);
           // camera.position.set(worldPosition.x + 100, worldPosition.y + 100,worldPosition.z + 100);
             ////---------------------------悬浮图表
-            let label = document.createElement('div');
-            label.className = "buildingLabel";
-            // let
-
             // 将dom节点转换为base64编码的图片
-            this.$refs.sceneDiv.appendChild(label);
-            domtoimage.toPng(label)
-            .then((dataUrl) => {
-              var texture = new THREE.TextureLoader().load(dataUrl);
+            // domtoimage.toPng(document.getElementById("video_0"))
+            // .then((dataUrl) => {
+              let video = document.createElement('video');
+              video.src ='/videos/3.mp4'
+              video.autoplay = "autoplay";
+              var texture = new THREE.VideoTexture(video)
               texture.minFilter = THREE.LinearFilter
+
+              // var texture = new THREE.TextureLoader().load(dataUrl);
+    
               var spriteMaterial = new THREE.SpriteMaterial({
-                map: texture,
+                map: texture,//设置精灵纹理贴图
               });
-              var sprite = new THREE.Sprite(spriteMaterial); 
+              var sprite = new THREE.Sprite(spriteMaterial); // 精灵模型，不管从哪个角度看都可以一直面对你
+
+              
               const v3 = new THREE.Vector3()
               sprite.scale.set(10,10,10)
               let boxs= new THREE.Box3().setFromObject(sprite);
 
               scene.add(sprite);
-              sprite.position.set(worldPosition.x, worldPosition.y+(box.max.y - box.min.y)/2+10, worldPosition.z); 
-              this.$refs.sceneDiv.removeChild(label);
-            })
-            .catch(function (error) {
-              console.error('wrong!', error);
-            });
-            ////----------------------------------video
-              // let video = document.createElement('video');
-              // video.src ='/videos/3.mp4'
-              // video.autoplay = "autoplay";
-              // var texture = new THREE.VideoTexture(video)
-              // texture.minFilter = THREE.LinearFilter
-              // var spriteMaterial = new THREE.SpriteMaterial({
-              //   map: texture,
-              // });
-              // var sprite = new THREE.Sprite(spriteMaterial); 
-              // const v3 = new THREE.Vector3()
-              // sprite.scale.set(10,10,10)
-              // let boxs= new THREE.Box3().setFromObject(sprite);
-
-              // scene.add(sprite);
-              // sprite.position.set(worldPosition.x, worldPosition.y+(box.max.y - box.min.y)/2, worldPosition.z); 
+              sprite.position.set(worldPosition.x, worldPosition.y + v3.y/2, worldPosition.z); // 根据刚才获取的世界坐标设置精灵模型位置，高度加了3，是为了使精灵模型显示在点击模型的上方
     
+            // })
+            // .catch(function (error) {
+            //   console.error('oops, something went wrong!', error);
+            // });
             /////-------------------------
-          }
-        else{
-          _this.outlinePass.selectedObjects = [];
-        }
       }
       else{
         // this.animateCameraFun(camera.position,controls.target,new THREE.Vector3(300,400,300),new THREE.Vector3(0,0,0))
@@ -410,14 +392,13 @@ export default {
       var worldPosition = new THREE.Vector3(); // 初始化一个3D坐标，用来记录模型的世界坐标
       
       if (intersects.length) {
+        console.log(name);
         let obj = intersects[0].object
         let objName = obj.name.split("/");
-        if((filenames['Teaching'].indexOf(objName[objName.length-1])>0)||((filenames['Living'].indexOf(objName[objName.length-1])>0))){
+        if(objName[objName.length-1] in filenames['Teaching']){
+          console.log(objName[objName.length-1])
+        }
          _this.outlinePass.selectedObjects = [intersects[0].object];
-        }
-        else{
-          _this.outlinePass.selectedObjects = [];
-        }
       }
     },
     //摄像头聚焦方法

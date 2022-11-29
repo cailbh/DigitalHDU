@@ -159,8 +159,6 @@ export default {
       let shaderMaterial = new THREE.ShaderMaterial({
         transparent: true,
         side: THREE.DoubleSide,
-        depthWrite: false,
-        colorWrite : false,
         uniforms: {
           uHeight:  { value: uHeight,},
           uTime: { value: uTime,},
@@ -177,7 +175,7 @@ export default {
       if(obj.name == 'box'){
 
       obj.material = shaderMaterial;
-      // obj.material.depthWrite = false; 
+      obj.material.colorWrite = false; 
       // let box= 
       let boundingBox = new THREE.Box3().setFromObject(obj);
       // 初始化扫描配置,y轴上下需留出一定空间，防止把上下平面扫描出来
@@ -199,8 +197,8 @@ export default {
       requestAnimationFrame(animate); 
       renderer.outputEncoding = THREE.sRGBEncoding;
         // renderer.render(scene, camera);
-      // scene.traverse(boxScan);
-      // calcHeight()
+      scene.traverse(boxScan);
+      calcHeight()
       if(composer){
         // camera.layers.set(1)
         scene.traverse( darkenNonBloomed );

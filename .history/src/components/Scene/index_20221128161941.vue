@@ -335,10 +335,8 @@ export default {
             ////---------------------------悬浮图表
             let label = document.createElement('div');
             label.className = "buildingLabel";
-            // let
 
             // 将dom节点转换为base64编码的图片
-            this.$refs.sceneDiv.appendChild(label);
             domtoimage.toPng(label)
             .then((dataUrl) => {
               var texture = new THREE.TextureLoader().load(dataUrl);
@@ -352,11 +350,10 @@ export default {
               let boxs= new THREE.Box3().setFromObject(sprite);
 
               scene.add(sprite);
-              sprite.position.set(worldPosition.x, worldPosition.y+(box.max.y - box.min.y)/2+10, worldPosition.z); 
-              this.$refs.sceneDiv.removeChild(label);
+              sprite.position.set(worldPosition.x, worldPosition.y+(box.max.y - box.min.y)/2, worldPosition.z); 
             })
             .catch(function (error) {
-              console.error('wrong!', error);
+              console.error('oops, something went wrong!', error);
             });
             ////----------------------------------video
               // let video = document.createElement('video');

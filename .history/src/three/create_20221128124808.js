@@ -199,8 +199,8 @@ export default {
       requestAnimationFrame(animate); 
       renderer.outputEncoding = THREE.sRGBEncoding;
         // renderer.render(scene, camera);
-      // scene.traverse(boxScan);
-      // calcHeight()
+      scene.traverse(boxScan);
+      calcHeight()
       if(composer){
         // camera.layers.set(1)
         scene.traverse( darkenNonBloomed );

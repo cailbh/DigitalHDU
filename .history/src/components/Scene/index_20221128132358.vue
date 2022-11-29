@@ -333,48 +333,34 @@ export default {
           // camera.lookAt(worldPosition);
           // camera.position.set(worldPosition.x + 100, worldPosition.y + 100,worldPosition.z + 100);
             ////---------------------------悬浮图表
-            let label = document.createElement('div');
-            label.className = "buildingLabel";
-            // let
-
             // 将dom节点转换为base64编码的图片
-            this.$refs.sceneDiv.appendChild(label);
-            domtoimage.toPng(label)
-            .then((dataUrl) => {
-              var texture = new THREE.TextureLoader().load(dataUrl);
+            // domtoimage.toPng(document.getElementById("video_0"))
+            // .then((dataUrl) => {
+              let video = document.createElement('video');
+              video.src ='/videos/3.mp4'
+              video.autoplay = "autoplay";
+              var texture = new THREE.VideoTexture(video)
               texture.minFilter = THREE.LinearFilter
+
+              // var texture = new THREE.TextureLoader().load(dataUrl);
+    
               var spriteMaterial = new THREE.SpriteMaterial({
-                map: texture,
+                map: texture,//设置精灵纹理贴图
               });
-              var sprite = new THREE.Sprite(spriteMaterial); 
+              var sprite = new THREE.Sprite(spriteMaterial); // 精灵模型，不管从哪个角度看都可以一直面对你
+
+              
               const v3 = new THREE.Vector3()
               sprite.scale.set(10,10,10)
               let boxs= new THREE.Box3().setFromObject(sprite);
 
               scene.add(sprite);
-              sprite.position.set(worldPosition.x, worldPosition.y+(box.max.y - box.min.y)/2+10, worldPosition.z); 
-              this.$refs.sceneDiv.removeChild(label);
-            })
-            .catch(function (error) {
-              console.error('wrong!', error);
-            });
-            ////----------------------------------video
-              // let video = document.createElement('video');
-              // video.src ='/videos/3.mp4'
-              // video.autoplay = "autoplay";
-              // var texture = new THREE.VideoTexture(video)
-              // texture.minFilter = THREE.LinearFilter
-              // var spriteMaterial = new THREE.SpriteMaterial({
-              //   map: texture,
-              // });
-              // var sprite = new THREE.Sprite(spriteMaterial); 
-              // const v3 = new THREE.Vector3()
-              // sprite.scale.set(10,10,10)
-              // let boxs= new THREE.Box3().setFromObject(sprite);
-
-              // scene.add(sprite);
-              // sprite.position.set(worldPosition.x, worldPosition.y+(box.max.y - box.min.y)/2, worldPosition.z); 
+              sprite.position.set(worldPosition.x, worldPosition.y+(box.max.y - box.min.y), worldPosition.z); // 根据刚才获取的世界坐标设置精灵模型位置，高度加了3，是为了使精灵模型显示在点击模型的上方
     
+            // })
+            // .catch(function (error) {
+            //   console.error('oops, something went wrong!', error);
+            // });
             /////-------------------------
           }
         else{

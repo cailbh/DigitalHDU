@@ -111,8 +111,8 @@ export default {
     function calcHeight() {
       let length = scanConfig.end - scanConfig.start;
       // 扫描动态效果实现
-      uHeight += length / scanConfig.during / 8;
-      if (uHeight >= scanConfig.end-10.5) {
+      uHeight += length / scanConfig.during / 10;
+      if (uHeight >= scanConfig.end) {
         uHeight = scanConfig.start;
       }
     }
@@ -140,18 +140,18 @@ export default {
             }
           void main()
           {
-            // vec2 rotateUv = rotate(vUv, -uTime , vec2(0.5));
-            // float angle = atan(rotateUv.y - 0.5, rotateUv.x - 0.5);
-            // float strengthr = mod((angle + 3.14) / 6.28 * 8.0, 1.0);
-            // float strengthr = mod(uTime * uTime , 1.0);
+            vec2 rotateUv = rotate(vUv, -uTime , vec2(0.5));
+            float angle = atan(rotateUv.y - 0.5, rotateUv.x - 0.5);
+            float strengthr = mod((angle + 3.14) / 6.28 * 8.0, 1.0);
+            float strengthg= mod((angle + 3.14) / 6.28 * 16.0, 1.0);
+            float strengthb = mod((angle + 3.14) / 6.28 * 24.0, 1.0);
             //模型的基础颜色
           vec4 distColor=uModelColor;
           // 流动范围当前点z的高度加上流动线的高度
-          float topY = uHeight +1.2;
+          float topY = uHeight +0.2;
           if (uHeight < vPosition.y && vPosition.y < topY) {
           // 颜色渐变 
-            // distColor = vec4(0,strengthr, strengthr, 1.0);
-            distColor = vec4(0,0.5, 0.5, 1.0);
+            distColor = vec4(0,strengthr, strengthr, 1.0);
           }
 
           gl_FragColor = distColor;
@@ -159,8 +159,6 @@ export default {
       let shaderMaterial = new THREE.ShaderMaterial({
         transparent: true,
         side: THREE.DoubleSide,
-        depthWrite: false,
-        colorWrite : false,
         uniforms: {
           uHeight:  { value: uHeight,},
           uTime: { value: uTime,},
@@ -177,12 +175,11 @@ export default {
       if(obj.name == 'box'){
 
       obj.material = shaderMaterial;
-      // obj.material.depthWrite = false; 
       // let box= 
       let boundingBox = new THREE.Box3().setFromObject(obj);
       // 初始化扫描配置,y轴上下需留出一定空间，防止把上下平面扫描出来
-      scanConfig.start = -(boundingBox.max.y-boundingBox.min.y)/2+0.5;
-      scanConfig.end = boundingBox.max.y-0.5;
+      scanConfig.start = -(boundingBox.max.y-boundingBox.min.y)/2;
+      scanConfig.end = boundingBox.max.y-0.5 || 0;
       uTime += 0.1;
       if(uHeight<scanConfig.start||uHeight>scanConfig.end)uHeight = scanConfig.start;
       }
@@ -199,8 +196,8 @@ export default {
       requestAnimationFrame(animate); 
       renderer.outputEncoding = THREE.sRGBEncoding;
         // renderer.render(scene, camera);
-      // scene.traverse(boxScan);
-      // calcHeight()
+      scene.traverse(boxScan);
+      calcHeight()
       if(composer){
         // camera.layers.set(1)
         scene.traverse( darkenNonBloomed );

@@ -198,20 +198,20 @@ export default {
       const time = clock.getElapsedTime();
       requestAnimationFrame(animate); 
       renderer.outputEncoding = THREE.sRGBEncoding;
-        // renderer.render(scene, camera);
+        renderer.render(scene, camera);
       // scene.traverse(boxScan);
       // calcHeight()
-      if(composer){
-        // camera.layers.set(1)
-        scene.traverse( darkenNonBloomed );
-        composer.render();
-        // // camera.layers.set(0)
-        scene.traverse( restoreMaterial );
-        finalComposer.render();
-      }
-      else{
-        renderer.render(scene, camera);
-      }
+      // if(composer){
+      //   // camera.layers.set(1)
+      //   scene.traverse( darkenNonBloomed );
+      //   composer.render();
+      //   // // camera.layers.set(0)
+      //   scene.traverse( restoreMaterial );
+      //   finalComposer.render();
+      // }
+      // else{
+      //   renderer.render(scene, camera);
+      // }
     }
     animate()
   },
