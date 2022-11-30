@@ -364,7 +364,7 @@ export default {
               sprite.scale.set(10,10,10)
               let boxs= new THREE.Box3().setFromObject(sprite);
 
-              // scene.add(sprite);
+              scene.add(sprite);
               sprite.position.set(worldPosition.x, worldPosition.y+(box.max.y - box.min.y)/2+10, worldPosition.z); 
               this.$refs.sceneDiv.removeChild(label);
             })
@@ -738,10 +738,10 @@ export default {
     //添加物体
     create.createBuildingGLTF(sceneTeaching,'Teaching_Ground',0,0,0);
     create.createBuildingGLTF(sceneLiving,'Livinging_Ground',0,0,0);
-    // create.createBuildingIFC(sceneTeaching,'生活区单独模型/2号楼',0,0,0);
-    // create.createBuildingIFC(sceneLiving,'生活区单独模型/3号楼',0,0,0);
-    // create.createBuildingIFC(sceneLiving,'生活区单独模型/4号楼北',0,0,0);
-    // create.createBuildingIFC(sceneLiving,'生活区单独模型/4号楼南',0,0,0);
+    create.createBuildingIFC(sceneTeaching,'生活区单独模型/2号楼',0,0,0);
+    create.createBuildingIFC(sceneLiving,'生活区单独模型/3号楼',0,0,0);
+    create.createBuildingIFC(sceneLiving,'生活区单独模型/4号楼北',0,0,0);
+    create.createBuildingIFC(sceneLiving,'生活区单独模型/4号楼南',0,0,0);
 
 
 
@@ -765,14 +765,14 @@ export default {
         // sceneTeaching.add(wallMesh);
 
     // console.log(filenames)
-    for(let i in filenames['Teaching']){
-      let name = filenames['Teaching'][i]
-      create.createBuildingIFC(sceneTeaching,'教学区单独模型/'+name,0,0,0);
-    }
-    for(let i in filenames['Living']){
-      let name = filenames['Living'][i]
-      create.createBuildingIFC(sceneLiving,'生活区单独模型/'+name,0,0,0);
-    }
+    // for(let i in filenames['Teaching']){
+    //   let name = filenames['Teaching'][i]
+    //   create.createBuildingIFC(sceneTeaching,'教学区单独模型/'+name,0,0,0);
+    // }
+    // for(let i in filenames['Living']){
+    //   let name = filenames['Living'][i]
+    //   create.createBuildingIFC(sceneLiving,'生活区单独模型/'+name,0,0,0);
+    // }
     // create.createBox(sceneTeaching,100,100,100,0,0,0)
     create.createAmbientLinght(sceneTeaching);
     create.createDirectionalLight(sceneTeaching,1000,2000,1000);

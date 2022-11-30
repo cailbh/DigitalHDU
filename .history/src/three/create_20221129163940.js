@@ -6,7 +6,7 @@ import createBuildingIFC from './model/buildingIFC';
 import createBuildingOBJ from './model/buildingOBJ';
 import createBuildingGLTF from './model/buildingGLTF';
 // import createScene from './model/scene';
-// import stats from './Stats'
+import stats from './Stats'
 import createPointLinght from './modify/pointLinght'
 import createDirectionalLight from './modify/directionalLight'
 import createAmbientLinght from './modify/ambientLinght'
@@ -37,6 +37,63 @@ export default {
       renderer.setSize(window.innerWidth, window.innerHeight);
       //   设置渲染器的像素比例
       renderer.setPixelRatio(window.devicePixelRatio);
+    });
+  },
+   //  * 创建流体墙体材质
+  createFlowWallMat({ bgUrl, flowUrl }){
+    // 顶点着色器
+    const vertexShader = `
+        varying vec2 vUv;
+        varying vec3 fNormal;
+        varying vec3 vPosition;
+        void main(){
+                vUv = uv;
+                vPosition = position;
+                vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+                gl_Position = projectionMatrix * mvPosition;
+        }
+    `;
+    // 片元着色器
+    const fragmentShader = `
+        uniform float time;
+        varying vec2 vUv;
+        uniform sampler2D flowTexture;
+        uniform sampler2D bgTexture;
+        void main( void ) {
+            vec2 position = vUv;
+            vec4 colora = texture2D( flowTexture, vec2( vUv.x, fract(vUv.y - time )));
+            vec4 colorb = texture2D( bgTexture , position.xy);
+            gl_FragColor = colorb + colorb * colora;
+        }
+    `;
+    const bgTexture = new THREE.TextureLoader().load(
+      bgUrl || "./textures/wave.jpg"
+    );
+    const flowTexture = new THREE.TextureLoader().load(
+      flowUrl ||
+        "https://model.3dmomoda.com/models/da5e99c0be934db7a42208d5d466fd33/0/gltf/F3E2E977BDB335778301D9A1FA4A4415.png"
+      // "https://model.3dmomoda.com/models/47007127aaf1489fb54fa816a15551cd/0/gltf/116802027AC38C3EFC940622BC1632BA.jpg"
+    );
+    // 允许平铺
+    flowTexture.wrapS = THREE.RepeatWrapping;
+    return new THREE.ShaderMaterial({
+      uniforms: {
+        time: {
+          value: 0,
+        },
+        flowTexture: {
+          value: flowTexture,
+        },
+        bgTexture: {
+          value: bgTexture,
+        },
+      },
+      transparent: true,
+      depthWrite: false,
+      depthTest: false,
+      side: THREE.DoubleSide,
+      vertexShader: vertexShader,
+      fragmentShader: fragmentShader,
     });
   },
 
@@ -97,65 +154,8 @@ export default {
     var uHeight = - 1.0;
     var uTime = 0;
     var uScale = 0;
-      var uOpacity = 1;
-    //  * 创建流体墙体材质
-    function createFlowWallMat({ bgUrl, flowUrl }){
-      // 顶点着色器
-      const vertexShader = `
-          varying vec2 vUv;
-          varying vec3 fNormal;
-          varying vec3 vPosition;
-          void main(){
-                  vUv = uv;
-                  vPosition = position;
-                  vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
-                  gl_Position = projectionMatrix * mvPosition;
-          }
-      `;
-      // 片元着色器
-      const fragmentShader = `
-          uniform float time;
-          varying vec2 vUv;
-          uniform sampler2D flowTexture;
-          uniform sampler2D bgTexture;
-          void main( void ) {
-              vec2 position = vUv;
-              vec4 colora = texture2D( flowTexture, vec2( vUv.x, fract(vUv.y - time )));
-              vec4 colorb = texture2D( bgTexture , position.xy);
-              gl_FragColor = colorb + colorb * colora;
-          }
-      `;
-      const bgTexture = new THREE.TextureLoader().load(
-        bgUrl || "./textures/tool-layout.png"
-      );
-      const flowTexture = new THREE.TextureLoader().load(
-        flowUrl ||
-          // "https://model.3dmomoda.com/models/da5e99c0be934db7a42208d5d466fd33/0/gltf/F3E2E977BDB335778301D9A1FA4A4415.png"
-        "https://model.3dmomoda.com/models/47007127aaf1489fb54fa816a15551cd/0/gltf/116802027AC38C3EFC940622BC1632BA.jpg"
-      );
-      // 允许平铺
-      flowTexture.wrapS = THREE.RepeatWrapping;
-      return new THREE.ShaderMaterial({
-        uniforms: {
-          time: {
-            value: 0,
-          },
-          flowTexture: {
-            value: flowTexture,
-          },
-          bgTexture: {
-            value: bgTexture,
-          },
-        },
-        transparent: true,
-        depthWrite: false,
-        depthTest: false,
-        side: THREE.DoubleSide,
-        vertexShader: vertexShader,
-        fragmentShader: fragmentShader,
-      });
-    }
-    const wallMat = createFlowWallMat({});
+    var uOpacity = 1;
+    const wallMat = this.createFlowWallMat({});
     function darkenNonBloomed( obj ) {
       var bloomLayer = new THREE.Layers();
       bloomLayer.set( 1);
@@ -273,7 +273,7 @@ export default {
     function animate(t) {
       controls.update();
       TWEEN.update();
-      // stats.update();
+      stats.update();
       const time = clock.getElapsedTime();
       requestAnimationFrame(animate); 
       renderer.outputEncoding = THREE.sRGBEncoding;
@@ -281,7 +281,6 @@ export default {
       // scene.traverse(boxScan);
       // calcHeight()
       calcWave();
-      wallMat.uniforms.time.value += 0.01;
       if(composer){
         // camera.layers.set(1)
         scene.traverse( darkenNonBloomed );
@@ -326,7 +325,7 @@ export default {
     createBuildingOBJ(scene,name,x,y,z)
   },
   createBuildingGLTF:(scene,name,x,y,z)=>{
-   return createBuildingGLTF(scene,name,x,y,z)
+    createBuildingGLTF(scene,name,x,y,z)
   },
 
   createAmbientLinght:(scene)=>{

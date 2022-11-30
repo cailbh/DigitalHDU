@@ -34,6 +34,5 @@ function modifyMaterial(mesh,textureurl) {
   
 
   mesh.material = material
-  return material;
 }
 export default modifyMaterial;

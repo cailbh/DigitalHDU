@@ -6,7 +6,7 @@ import createBuildingIFC from './model/buildingIFC';
 import createBuildingOBJ from './model/buildingOBJ';
 import createBuildingGLTF from './model/buildingGLTF';
 // import createScene from './model/scene';
-// import stats from './Stats'
+import stats from './Stats'
 import createPointLinght from './modify/pointLinght'
 import createDirectionalLight from './modify/directionalLight'
 import createAmbientLinght from './modify/ambientLinght'
@@ -273,7 +273,7 @@ export default {
     function animate(t) {
       controls.update();
       TWEEN.update();
-      // stats.update();
+      stats.update();
       const time = clock.getElapsedTime();
       requestAnimationFrame(animate); 
       renderer.outputEncoding = THREE.sRGBEncoding;
@@ -326,7 +326,7 @@ export default {
     createBuildingOBJ(scene,name,x,y,z)
   },
   createBuildingGLTF:(scene,name,x,y,z)=>{
-   return createBuildingGLTF(scene,name,x,y,z)
+    createBuildingGLTF(scene,name,x,y,z)
   },
 
   createAmbientLinght:(scene)=>{

@@ -13,7 +13,7 @@ export default function createBox(scene,l,h,w,x,y,z) {
   box.name = "box";
   box.position.set(x,y,z);
   box.receiveShadows = true;
-  // modifyMaterial(box);
+  modifyMaterial(box);
   scene.add(box);
   return box;
 }

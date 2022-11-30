@@ -177,7 +177,63 @@ export default {
       finalComposer.addPass(finalPass);
       return [composer,finalComposer,outlinePass]
     },
-   
+    //  * 创建流体墙体材质
+    createFlowWallMat({ bgUrl, flowUrl }){
+      // 顶点着色器
+      const vertexShader = `
+          varying vec2 vUv;
+          varying vec3 fNormal;
+          varying vec3 vPosition;
+          void main(){
+                  vUv = uv;
+                  vPosition = position;
+                  vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+                  gl_Position = projectionMatrix * mvPosition;
+          }
+      `;
+      // 片元着色器
+      const fragmentShader = `
+          uniform float time;
+          varying vec2 vUv;
+          uniform sampler2D flowTexture;
+          uniform sampler2D bgTexture;
+          void main( void ) {
+              vec2 position = vUv;
+              vec4 colora = texture2D( flowTexture, vec2( vUv.x, fract(vUv.y - time )));
+              vec4 colorb = texture2D( bgTexture , position.xy);
+              gl_FragColor = colorb + colorb * colora;
+          }
+      `;
+      const bgTexture = new THREE.TextureLoader().load(
+        bgUrl || "./textures/asphalt.jpg"
+      );
+      const flowTexture = new THREE.TextureLoader().load(
+        flowUrl ||
+          "https://model.3dmomoda.com/models/da5e99c0be934db7a42208d5d466fd33/0/gltf/F3E2E977BDB335778301D9A1FA4A4415.png"
+        // "https://model.3dmomoda.com/models/47007127aaf1489fb54fa816a15551cd/0/gltf/116802027AC38C3EFC940622BC1632BA.jpg"
+      );
+      // 允许平铺
+      flowTexture.wrapS = THREE.RepeatWrapping;
+      return new THREE.ShaderMaterial({
+        uniforms: {
+          time: {
+            value: 0,
+          },
+          flowTexture: {
+            value: flowTexture,
+          },
+          bgTexture: {
+            value: bgTexture,
+          },
+        },
+        transparent: true,
+        depthWrite: false,
+        depthTest: false,
+        side: THREE.DoubleSide,
+        vertexShader: vertexShader,
+        fragmentShader: fragmentShader,
+      });
+    },
 
     outline(){ 
       let _this = this;
@@ -364,7 +420,7 @@ export default {
               sprite.scale.set(10,10,10)
               let boxs= new THREE.Box3().setFromObject(sprite);
 
-              // scene.add(sprite);
+              scene.add(sprite);
               sprite.position.set(worldPosition.x, worldPosition.y+(box.max.y - box.min.y)/2+10, worldPosition.z); 
               this.$refs.sceneDiv.removeChild(label);
             })
@@ -738,41 +794,19 @@ export default {
     //添加物体
     create.createBuildingGLTF(sceneTeaching,'Teaching_Ground',0,0,0);
     create.createBuildingGLTF(sceneLiving,'Livinging_Ground',0,0,0);
-    // create.createBuildingIFC(sceneTeaching,'生活区单独模型/2号楼',0,0,0);
-    // create.createBuildingIFC(sceneLiving,'生活区单独模型/3号楼',0,0,0);
-    // create.createBuildingIFC(sceneLiving,'生活区单独模型/4号楼北',0,0,0);
-    // create.createBuildingIFC(sceneLiving,'生活区单独模型/4号楼南',0,0,0);
-
-
-
-    const path = [
-          [200, 0, 200],
-          [200, 0,-200],
-          [-200,0,-200],
-          [-200,0, 200],
-          [200, 0, 200],
-        ];
-        // const wallMat = _this.createFlowWallMat({});
-        const wallMesh = creatWallByPath({
-          // material: wallMat,
-          path,
-          height: 20,
-        });
-
-        // animateList.push(() => {
-        //   wallMat.uniforms.time.value += 0.01;
-        // });
-        // sceneTeaching.add(wallMesh);
-
+    create.createBuildingIFC(sceneTeaching,'生活区单独模型/2号楼',0,0,0);
+    create.createBuildingIFC(sceneLiving,'生活区单独模型/3号楼',0,0,0);
+    create.createBuildingIFC(sceneLiving,'生活区单独模型/4号楼北',0,0,0);
+    create.createBuildingIFC(sceneLiving,'生活区单独模型/4号楼南',0,0,0);
     // console.log(filenames)
-    for(let i in filenames['Teaching']){
-      let name = filenames['Teaching'][i]
-      create.createBuildingIFC(sceneTeaching,'教学区单独模型/'+name,0,0,0);
-    }
-    for(let i in filenames['Living']){
-      let name = filenames['Living'][i]
-      create.createBuildingIFC(sceneLiving,'生活区单独模型/'+name,0,0,0);
-    }
+    // for(let i in filenames['Teaching']){
+    //   let name = filenames['Teaching'][i]
+    //   create.createBuildingIFC(sceneTeaching,'教学区单独模型/'+name,0,0,0);
+    // }
+    // for(let i in filenames['Living']){
+    //   let name = filenames['Living'][i]
+    //   create.createBuildingIFC(sceneLiving,'生活区单独模型/'+name,0,0,0);
+    // }
     // create.createBox(sceneTeaching,100,100,100,0,0,0)
     create.createAmbientLinght(sceneTeaching);
     create.createDirectionalLight(sceneTeaching,1000,2000,1000);
@@ -813,9 +847,31 @@ export default {
     let composer = _this.composer;
     let finalComposer = _this.finalComposer;
 
+    const path = [
+          [80, 0, -40],
+          [10, 0, 0],
+          [60, 0, 50],
+          [0, 10, 0],
+          [10, 10, 10],
+          [-60, 0, 50],
+          [-50, 0, -30],
+          [80, 0, -40],
+        ];
+        const wallMat = _this.createFlowWallMat({});
+        const wallMesh = creatWallByPath({
+          material: wallMat,
+          path,
+          height: 20,
+        });
+
+        animateList.push(() => {
+          wallMat.uniforms.time.value += 0.01;
+        });
+        scene.add(wallMesh);
+
 
     this.$refs.sceneDiv.appendChild(renderer.domElement)
-    // this.$refs.sceneDiv.appendChild(stats.domElement);
+    this.$refs.sceneDiv.appendChild(stats.domElement);
     this.$refs.sceneDiv.addEventListener("click", this.onmodelClick); // 监听点击事件
     this.$refs.sceneDiv.addEventListener("mousemove", this.onmodelMousemove); // 监听点击事件
     create.Animate(controls,scene,camera,renderer,composer,finalComposer)

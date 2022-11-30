@@ -29,7 +29,6 @@ export default function createBuildingGTLF(scene,name,x,y,z) {
         gltf.scene.name = name
         obj = gltf.scene
         scene.add(gltf.scene)
-        console.log(obj)
         return obj;
     }, (res)=>{
     },(e)=>{

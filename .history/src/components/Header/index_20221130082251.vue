@@ -24,7 +24,7 @@
     </div>
     <div class="headMid">
       <div class="headMidUp">
-        杭州电子科技大学数字孪生校园
+        杭州电子科技大学数字孪生效应
       </div>
       <div class="headMidDown"> 
       </div>

@@ -22,7 +22,6 @@ import TWEEN from '@tweenjs/tween.js'
 import axesHelper from "@/three/axesHelper";
 import create from "@/three/create";
 import modifyMaterial from "@/three/modify/modifyMaterial";
-import creatWallByPath from "@/three/creatWallByPath"
 //控制天空盒
 import changeSky from "@/three/sky";
 import domtoimage from 'dom-to-image';
@@ -177,8 +176,7 @@ export default {
       finalComposer.addPass(finalPass);
       return [composer,finalComposer,outlinePass]
     },
-   
-
+    
     outline(){ 
       let _this = this;
       let scene = _this.scene;
@@ -296,6 +294,7 @@ export default {
       let controls =  _this.controls
       let mouse = new THREE.Vector2(); // 初始化一个2D坐标用于存储鼠标位置
       let raycaster = new THREE.Raycaster(); // 初始化光线追踪
+      _this.removeMeshByName(scene,'wave');
       // 获取鼠标点击位置
       mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
       mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
@@ -322,7 +321,6 @@ export default {
         let objName = obj.name.split("/");
         if((filenames['Teaching'].indexOf(objName[objName.length-1])>0)||((filenames['Living'].indexOf(objName[objName.length-1])>0))){
         //  _this.outlinePass.selectedObjects = [intersects[0].object];
-        
           obj.layers.toggle(1);
         // intersects[0].object.add(new THREE.LineSegments(intersects[0].object.geometry, lineMaterial));
 
@@ -333,8 +331,7 @@ export default {
           worldPosition.z =box.min.z+(box.max.z - box.min.z)/2
           let r=(box.max.x - box.min.x) > (box.max.z - box.min.z) ? (box.max.x - box.min.x)/2 : (box.max.z - box.min.z)/2;
           // create.createBox(scene,(box.max.x - box.min.x)+1,(box.max.y - box.min.y),(box.max.z - box.min.z)+1,worldPosition.x,worldPosition.y,worldPosition.z);
-          let wave = create.createCylinder(scene,r,r*2,2,64,worldPosition.x,0,worldPosition.z,"wave");
-          wave.layers.toggle(1)
+          let wave = create.createCylinder(scene,r,r,5,64,worldPosition.x,0,worldPosition.z,"wave");
           modifyMaterial(wave,'wave.jpg');
 
           var target1 = worldPosition
@@ -364,7 +361,7 @@ export default {
               sprite.scale.set(10,10,10)
               let boxs= new THREE.Box3().setFromObject(sprite);
 
-              // scene.add(sprite);
+              scene.add(sprite);
               sprite.position.set(worldPosition.x, worldPosition.y+(box.max.y - box.min.y)/2+10, worldPosition.z); 
               this.$refs.sceneDiv.removeChild(label);
             })
@@ -391,7 +388,6 @@ export default {
             /////-------------------------
           }
         else{
-          _this.removeMeshByName(scene,'wave');
           _this.outlinePass.selectedObjects = [];
         }
       }
@@ -738,41 +734,19 @@ export default {
     //添加物体
     create.createBuildingGLTF(sceneTeaching,'Teaching_Ground',0,0,0);
     create.createBuildingGLTF(sceneLiving,'Livinging_Ground',0,0,0);
-    // create.createBuildingIFC(sceneTeaching,'生活区单独模型/2号楼',0,0,0);
-    // create.createBuildingIFC(sceneLiving,'生活区单独模型/3号楼',0,0,0);
-    // create.createBuildingIFC(sceneLiving,'生活区单独模型/4号楼北',0,0,0);
-    // create.createBuildingIFC(sceneLiving,'生活区单独模型/4号楼南',0,0,0);
-
-
-
-    const path = [
-          [200, 0, 200],
-          [200, 0,-200],
-          [-200,0,-200],
-          [-200,0, 200],
-          [200, 0, 200],
-        ];
-        // const wallMat = _this.createFlowWallMat({});
-        const wallMesh = creatWallByPath({
-          // material: wallMat,
-          path,
-          height: 20,
-        });
-
-        // animateList.push(() => {
-        //   wallMat.uniforms.time.value += 0.01;
-        // });
-        // sceneTeaching.add(wallMesh);
-
+    create.createBuildingIFC(sceneTeaching,'生活区单独模型/2号楼',0,0,0);
+    create.createBuildingIFC(sceneLiving,'生活区单独模型/3号楼',0,0,0);
+    create.createBuildingIFC(sceneLiving,'生活区单独模型/4号楼北',0,0,0);
+    create.createBuildingIFC(sceneLiving,'生活区单独模型/4号楼南',0,0,0);
     // console.log(filenames)
-    for(let i in filenames['Teaching']){
-      let name = filenames['Teaching'][i]
-      create.createBuildingIFC(sceneTeaching,'教学区单独模型/'+name,0,0,0);
-    }
-    for(let i in filenames['Living']){
-      let name = filenames['Living'][i]
-      create.createBuildingIFC(sceneLiving,'生活区单独模型/'+name,0,0,0);
-    }
+    // for(let i in filenames['Teaching']){
+    //   let name = filenames['Teaching'][i]
+    //   create.createBuildingIFC(sceneTeaching,'教学区单独模型/'+name,0,0,0);
+    // }
+    // for(let i in filenames['Living']){
+    //   let name = filenames['Living'][i]
+    //   create.createBuildingIFC(sceneLiving,'生活区单独模型/'+name,0,0,0);
+    // }
     // create.createBox(sceneTeaching,100,100,100,0,0,0)
     create.createAmbientLinght(sceneTeaching);
     create.createDirectionalLight(sceneTeaching,1000,2000,1000);
@@ -812,10 +786,8 @@ export default {
     let controls =  _this.controls;
     let composer = _this.composer;
     let finalComposer = _this.finalComposer;
-
-
     this.$refs.sceneDiv.appendChild(renderer.domElement)
-    // this.$refs.sceneDiv.appendChild(stats.domElement);
+    this.$refs.sceneDiv.appendChild(stats.domElement);
     this.$refs.sceneDiv.addEventListener("click", this.onmodelClick); // 监听点击事件
     this.$refs.sceneDiv.addEventListener("mousemove", this.onmodelMousemove); // 监听点击事件
     create.Animate(controls,scene,camera,renderer,composer,finalComposer)

@@ -1,12 +1,12 @@
 //创建物体组件
 import createplane from './mesh/plane';
 import createBox from './mesh/box';
-import createCylinder from './mesh/cylinder';
+import createCylinder from './mesh/Cylinder';
 import createBuildingIFC from './model/buildingIFC';
 import createBuildingOBJ from './model/buildingOBJ';
 import createBuildingGLTF from './model/buildingGLTF';
 // import createScene from './model/scene';
-// import stats from './Stats'
+import stats from './Stats'
 import createPointLinght from './modify/pointLinght'
 import createDirectionalLight from './modify/directionalLight'
 import createAmbientLinght from './modify/ambientLinght'
@@ -39,7 +39,6 @@ export default {
       renderer.setPixelRatio(window.devicePixelRatio);
     });
   },
-
   Scene:()=>{
     // 初始化场景
     const scene = new THREE.Scene();
@@ -95,67 +94,7 @@ export default {
       during: 3,
     }
     var uHeight = - 1.0;
-    var uTime = 0;
-    var uScale = 0;
-      var uOpacity = 1;
-    //  * 创建流体墙体材质
-    function createFlowWallMat({ bgUrl, flowUrl }){
-      // 顶点着色器
-      const vertexShader = `
-          varying vec2 vUv;
-          varying vec3 fNormal;
-          varying vec3 vPosition;
-          void main(){
-                  vUv = uv;
-                  vPosition = position;
-                  vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
-                  gl_Position = projectionMatrix * mvPosition;
-          }
-      `;
-      // 片元着色器
-      const fragmentShader = `
-          uniform float time;
-          varying vec2 vUv;
-          uniform sampler2D flowTexture;
-          uniform sampler2D bgTexture;
-          void main( void ) {
-              vec2 position = vUv;
-              vec4 colora = texture2D( flowTexture, vec2( vUv.x, fract(vUv.y - time )));
-              vec4 colorb = texture2D( bgTexture , position.xy);
-              gl_FragColor = colorb + colorb * colora;
-          }
-      `;
-      const bgTexture = new THREE.TextureLoader().load(
-        bgUrl || "./textures/tool-layout.png"
-      );
-      const flowTexture = new THREE.TextureLoader().load(
-        flowUrl ||
-          // "https://model.3dmomoda.com/models/da5e99c0be934db7a42208d5d466fd33/0/gltf/F3E2E977BDB335778301D9A1FA4A4415.png"
-        "https://model.3dmomoda.com/models/47007127aaf1489fb54fa816a15551cd/0/gltf/116802027AC38C3EFC940622BC1632BA.jpg"
-      );
-      // 允许平铺
-      flowTexture.wrapS = THREE.RepeatWrapping;
-      return new THREE.ShaderMaterial({
-        uniforms: {
-          time: {
-            value: 0,
-          },
-          flowTexture: {
-            value: flowTexture,
-          },
-          bgTexture: {
-            value: bgTexture,
-          },
-        },
-        transparent: true,
-        depthWrite: false,
-        depthTest: false,
-        side: THREE.DoubleSide,
-        vertexShader: vertexShader,
-        fragmentShader: fragmentShader,
-      });
-    }
-    const wallMat = createFlowWallMat({});
+    var uTime = 0.1;
     function darkenNonBloomed( obj ) {
       var bloomLayer = new THREE.Layers();
       bloomLayer.set( 1);
@@ -169,9 +108,6 @@ export default {
         obj.material = materials[ obj.uuid ];
         delete materials[ obj.uuid ];
       }
-      if(obj.name == 'wall'){
-        obj.material = wallMat;
-      }
     }
     function calcHeight() {
       let length = scanConfig.end - scanConfig.start;
@@ -179,14 +115,6 @@ export default {
       uHeight += length / scanConfig.during / 8;
       if (uHeight >= scanConfig.end-10.5) {
         uHeight = scanConfig.start;
-      }
-    }
-    function calcWave(){
-      uScale+=0.05;
-      uOpacity-=0.05;
-      if(uScale>1){
-        uScale=0;
-        uOpacity=1;
       }
     }
     function boxScan(obj){
@@ -201,34 +129,34 @@ export default {
           }
           `;
 
-      const uperFragment = `
-      varying vec3 vPosition;
-        uniform float uHeight;
-        uniform vec4 uFlowColor;
-        uniform vec4 uModelColor;
-        varying vec2 vUv;
-        uniform float uTime;
-        vec2 rotate(vec2 uv, float rotation, vec2 mid) {
-          return vec2(cos(rotation) * (uv.x - mid.x) + sin(rotation) * (uv.y - mid.y) + mid.x, cos(rotation) * (uv.y - mid.y) - sin(rotation) * (uv.x - mid.x) + mid.y);
-        }
-      void main()
-      {
-        // vec2 rotateUv = rotate(vUv, -uTime , vec2(0.5));
-        // float angle = atan(rotateUv.y - 0.5, rotateUv.x - 0.5);
-        // float strengthr = mod((angle + 3.14) / 6.28 * 8.0, 1.0);
-        // float strengthr = mod(uTime * uTime , 1.0);
-        //模型的基础颜色
-      vec4 distColor=uModelColor;
-      // 流动范围当前点z的高度加上流动线的高度
-      float topY = uHeight +1.2;
-      if (uHeight < vPosition.y && vPosition.y < topY) {
-      // 颜色渐变 
-        // distColor = vec4(0,strengthr, strengthr, 1.0);
-        distColor = vec4(0,0.5, 0.5, 1.0);
-      }
+          const uperFragment = `
+          varying vec3 vPosition;
+            uniform float uHeight;
+            uniform vec4 uFlowColor;
+            uniform vec4 uModelColor;
+            varying vec2 vUv;
+            uniform float uTime;
+            vec2 rotate(vec2 uv, float rotation, vec2 mid) {
+              return vec2(cos(rotation) * (uv.x - mid.x) + sin(rotation) * (uv.y - mid.y) + mid.x, cos(rotation) * (uv.y - mid.y) - sin(rotation) * (uv.x - mid.x) + mid.y);
+            }
+          void main()
+          {
+            // vec2 rotateUv = rotate(vUv, -uTime , vec2(0.5));
+            // float angle = atan(rotateUv.y - 0.5, rotateUv.x - 0.5);
+            // float strengthr = mod((angle + 3.14) / 6.28 * 8.0, 1.0);
+            // float strengthr = mod(uTime * uTime , 1.0);
+            //模型的基础颜色
+          vec4 distColor=uModelColor;
+          // 流动范围当前点z的高度加上流动线的高度
+          float topY = uHeight +1.2;
+          if (uHeight < vPosition.y && vPosition.y < topY) {
+          // 颜色渐变 
+            // distColor = vec4(0,strengthr, strengthr, 1.0);
+            distColor = vec4(0,0.5, 0.5, 1.0);
+          }
 
-      gl_FragColor = distColor;
-      }`;
+          gl_FragColor = distColor;
+          }`;
       let shaderMaterial = new THREE.ShaderMaterial({
         transparent: true,
         side: THREE.DoubleSide,
@@ -264,33 +192,23 @@ export default {
       //   obj.material = darkMaterial;
       // }
     }
-    function wave(obj){
-      if(obj.name == 'wave'){
-        obj.scale.set(1 + uScale, 1, 1 + uScale);
-        obj.material[0].opacity = uOpacity;
-      }
-    }
     function animate(t) {
       controls.update();
       TWEEN.update();
-      // stats.update();
+      stats.update();
       const time = clock.getElapsedTime();
       requestAnimationFrame(animate); 
       renderer.outputEncoding = THREE.sRGBEncoding;
         // renderer.render(scene, camera);
       // scene.traverse(boxScan);
       // calcHeight()
-      calcWave();
-      wallMat.uniforms.time.value += 0.01;
       if(composer){
         // camera.layers.set(1)
         scene.traverse( darkenNonBloomed );
         composer.render();
         // // camera.layers.set(0)
         scene.traverse( restoreMaterial );
-        scene.traverse(wave);
         finalComposer.render();
-
       }
       else{
         renderer.render(scene, camera);
@@ -326,7 +244,7 @@ export default {
     createBuildingOBJ(scene,name,x,y,z)
   },
   createBuildingGLTF:(scene,name,x,y,z)=>{
-   return createBuildingGLTF(scene,name,x,y,z)
+    createBuildingGLTF(scene,name,x,y,z)
   },
 
   createAmbientLinght:(scene)=>{

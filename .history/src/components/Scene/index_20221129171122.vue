@@ -364,7 +364,7 @@ export default {
               sprite.scale.set(10,10,10)
               let boxs= new THREE.Box3().setFromObject(sprite);
 
-              // scene.add(sprite);
+              scene.add(sprite);
               sprite.position.set(worldPosition.x, worldPosition.y+(box.max.y - box.min.y)/2+10, worldPosition.z); 
               this.$refs.sceneDiv.removeChild(label);
             })
@@ -736,49 +736,55 @@ export default {
     //添加辅助坐标轴
     // scene.add(axesHelper);
     //添加物体
-    create.createBuildingGLTF(sceneTeaching,'Teaching_Ground',0,0,0);
+     create.createBuildingGLTF(sceneTeaching,'Teaching_Ground',0,0,0);
     create.createBuildingGLTF(sceneLiving,'Livinging_Ground',0,0,0);
-    // create.createBuildingIFC(sceneTeaching,'生活区单独模型/2号楼',0,0,0);
-    // create.createBuildingIFC(sceneLiving,'生活区单独模型/3号楼',0,0,0);
-    // create.createBuildingIFC(sceneLiving,'生活区单独模型/4号楼北',0,0,0);
-    // create.createBuildingIFC(sceneLiving,'生活区单独模型/4号楼南',0,0,0);
+    create.createBuildingIFC(sceneTeaching,'生活区单独模型/2号楼',0,0,0);
+    create.createBuildingIFC(sceneLiving,'生活区单独模型/3号楼',0,0,0);
+    create.createBuildingIFC(sceneLiving,'生活区单独模型/4号楼北',0,0,0);
+    create.createBuildingIFC(sceneLiving,'生活区单独模型/4号楼南',0,0,0);
 
+    // let ground = sceneTeaching.getObjectByName("Teaching_Ground");
+    // console.log(ground);
+    // let box= new THREE.Box3().setFromObject(ground);
+    // console.log(box);
+    // const path = [
+    //       [80, 0, -40],
+    //       [10, 0, 0],
+    //       [60, 0, 50],
+    //       [0, 10, 0],
+    //       [10, 10, 10],
+    //       [-60, 0, 50],
+    //       [-50, 0, -30],
+    //       [80, 0, -40],
+    //     ];
+    //     // const wallMat = _this.createFlowWallMat({});
+    //     const wallMesh = creatWallByPath({
+    //       // material: wallMat,
+    //       path,
+    //       height: 20,
+    //     });
 
-
-    const path = [
-          [200, 0, 200],
-          [200, 0,-200],
-          [-200,0,-200],
-          [-200,0, 200],
-          [200, 0, 200],
-        ];
-        // const wallMat = _this.createFlowWallMat({});
-        const wallMesh = creatWallByPath({
-          // material: wallMat,
-          path,
-          height: 20,
-        });
-
-        // animateList.push(() => {
-        //   wallMat.uniforms.time.value += 0.01;
-        // });
-        // sceneTeaching.add(wallMesh);
+    //     // animateList.push(() => {
+    //     //   wallMat.uniforms.time.value += 0.01;
+    //     // });
+    //     scene.add(wallMesh);
 
     // console.log(filenames)
-    for(let i in filenames['Teaching']){
-      let name = filenames['Teaching'][i]
-      create.createBuildingIFC(sceneTeaching,'教学区单独模型/'+name,0,0,0);
-    }
-    for(let i in filenames['Living']){
-      let name = filenames['Living'][i]
-      create.createBuildingIFC(sceneLiving,'生活区单独模型/'+name,0,0,0);
-    }
+    // for(let i in filenames['Teaching']){
+    //   let name = filenames['Teaching'][i]
+    //   create.createBuildingIFC(sceneTeaching,'教学区单独模型/'+name,0,0,0);
+    // }
+    // for(let i in filenames['Living']){
+    //   let name = filenames['Living'][i]
+    //   create.createBuildingIFC(sceneLiving,'生活区单独模型/'+name,0,0,0);
+    // }
     // create.createBox(sceneTeaching,100,100,100,0,0,0)
     create.createAmbientLinght(sceneTeaching);
     create.createDirectionalLight(sceneTeaching,1000,2000,1000);
     create.createAmbientLinght(sceneLiving);
     create.createDirectionalLight(sceneLiving,1000,2000,1000);
     
+    sceneTeaching.traverse((obj)=>{console.log(obj.name)})
     // create.createPointLinght(500,800,500,10000,2)
     // changeSky("night")
     // create.Animate(controls,scene,camera,renderer)
@@ -813,9 +819,14 @@ export default {
     let composer = _this.composer;
     let finalComposer = _this.finalComposer;
 
+    // let ground = _this.sceneTeaching.getObjectByName("Teaching_Ground");
+    _this.sceneTeaching.traverse((obj)=>{console.log(obj)})
+    // console.log(ground);
+    // let box= new THREE.Box3().setFromObject(ground);
+    // console.log(box);
 
     this.$refs.sceneDiv.appendChild(renderer.domElement)
-    // this.$refs.sceneDiv.appendChild(stats.domElement);
+    this.$refs.sceneDiv.appendChild(stats.domElement);
     this.$refs.sceneDiv.addEventListener("click", this.onmodelClick); // 监听点击事件
     this.$refs.sceneDiv.addEventListener("mousemove", this.onmodelMousemove); // 监听点击事件
     create.Animate(controls,scene,camera,renderer,composer,finalComposer)

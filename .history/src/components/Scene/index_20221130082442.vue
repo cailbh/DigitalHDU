@@ -364,7 +364,7 @@ export default {
               sprite.scale.set(10,10,10)
               let boxs= new THREE.Box3().setFromObject(sprite);
 
-              // scene.add(sprite);
+              scene.add(sprite);
               sprite.position.set(worldPosition.x, worldPosition.y+(box.max.y - box.min.y)/2+10, worldPosition.z); 
               this.$refs.sceneDiv.removeChild(label);
             })
