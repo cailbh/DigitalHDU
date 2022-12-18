@@ -1,0 +1,14 @@
+#btnsDiv {
+  position: absolute;
+  top:60px;
+  right: 500px;
+  background: rgba(255,0,0,1);
+  /* top: 50px; */
+  width: 100px;
+  height: 500px; 
+  /* background-color: aqua; */
+}
+.btn{
+  width: 10px;
+  height: 10px;
+}

@@ -1,0 +1,10 @@
+#btnsDiv {
+  position: absolute;
+  top:60px;
+  right: 100px;
+  
+  /* top: 50px; */
+  width: 100px;
+  height: 500px; 
+  /* background-color: aqua; */
+}

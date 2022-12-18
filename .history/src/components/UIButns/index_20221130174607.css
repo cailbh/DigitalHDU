@@ -1,0 +1,10 @@
+#navBar {
+  position: absolute;
+  top:60px;
+  left: 20%;
+  
+  /* top: 50px; */
+  width: calc(60%);
+  height: 50px; 
+  /* background-color: aqua; */
+}

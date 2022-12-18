@@ -1,0 +1,75 @@
+#btnsDiv {
+  position: absolute;
+  top:160px;
+  right: 400px;
+  /* background: rgba(255,0,0,1); */
+  /* top: 50px; */
+  width: 50px;
+  height: 100px; 
+  /* background-color: aqua; */
+}
+
+#btnsBody{
+  position: absolute;
+  /* top:60px;
+  right: 500px; */
+  /* background: rgba(255,0,0,1); */
+  /* top: 50px; */
+  width: 100%;
+  height: 100%; 
+
+  /* width: calc(100% - 90px);
+  height: 100%;
+  position: absolute;
+  left: 50px; */
+  background: rgba(12, 46, 56,0) ;
+  background: linear-gradient(135deg, transparent 10px, rgba(12, 46, 56,0.9) 0) top left, linear-gradient(35deg, transparent 20px, rgba(12, 46, 56,0.9) 0) left;
+  background-size: 100% 50%;
+  background-repeat: no-repeat;
+  z-index: 2;
+  /* background-color: aqua; */
+}
+
+.bntDivShadow {
+  position: absolute;
+  /* top:60px;
+  right: 500px; */
+  /* background: rgba(255,0,0,1); */
+  /* top: 50px; */
+  width: 100%;
+  height: 100%; 
+  background: rgba(255, 0, 0, 0) ;
+  background: linear-gradient(135deg, transparent 10px, rgba(12, 46, 56,0.9) 0) top left, linear-gradient(35deg, transparent 20px, rgba(12, 46, 56,0.9) 0) left;
+  background-size: 100% 50%;
+  background-repeat: no-repeat;
+}
+.bntDivShadow::after {
+  content: "";
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background: inherit;
+  /* background-position: center center; */
+  filter: drop-shadow(0px 0px 10px rgba(131,255,253, 1)) blur(2px);
+  z-index: 2;
+
+  /* animation time! */
+  animation: oscillate 1s cubic-bezier(.17, .67, .45, 1.32) infinite alternate;
+}
+
+@keyframes oscillate {
+  from {
+      transform: scale(1, 1);
+  }
+
+  to {
+      transform: scale(1, 1);
+  }
+}
+.btn{
+  top: 100px;
+  width: 50px;
+  height: 50px;
+  margin-top: 100px;
+  background-color: aqua;
+}
